@@ -1,2 +1,2 @@
-# xade.ai
+# Xade.AI
 Xade AI Code
