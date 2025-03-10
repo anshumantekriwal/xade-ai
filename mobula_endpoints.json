@@ -1,236 +1,908 @@
 {
-    "get_blockchain_pairs": {
-        "description": "Retrieves trading pairs from a specific blockchain",
-        "use_case": "Monitor and analyze trading pairs on specific blockchain networks",
-        "inputs": {
-            "blockchain": {
-                "type": "str",
-                "description": "Blockchain name to filter pairs",
-                "required": false
-            },
-            "blockchains": {
-                "type": "str",
-                "description": "Multiple blockchain names (comma-separated)",
-                "required": false
-            },
-            "sortBy": {
-                "type": "str",
-                "description": "Sort field",
-                "required": false,
-                "default": "latest_trade_date"
-            },
-            "sortOrder": {
-                "type": "str",
-                "description": "Sort direction (asc/desc)",
-                "required": false,
-                "default": "desc"
-            },
-            "factory": {
-                "type": "str",
-                "description": "Factory contract address",
-                "required": false
-            },
-            "limit": {
-                "type": "int",
-                "description": "Number of pairs to return (max 100)",
-                "required": false,
-                "default": 100
-            },
-            "offset": {
-                "type": "int",
-                "description": "Number of pairs to skip",
-                "required": false,
-                "default": 0
-            },
-            "filters": {
-                "type": "str",
-                "description": "Additional filter criteria",
-                "required": false
-            }
-        },
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "List of trading pairs with their details"
-            },
-            "factories": {
-                "type": "object",
-                "description": "Factory contract details"
-            }
-        }
+  "get_blockchain_pairs": {
+    "description": "Retrieves trading pairs from a specific blockchain",
+    "use_case": "Monitor and analyze trading pairs on specific blockchain networks",
+    "inputs": {
+      "blockchain": {
+        "type": "str",
+        "description": "Blockchain name to filter pairs",
+        "required": false
+      },
+      "blockchains": {
+        "type": "str",
+        "description": "Multiple blockchain names (comma-separated)",
+        "required": false
+      },
+      "sortBy": {
+        "type": "str",
+        "description": "Sort field",
+        "required": false,
+        "default": "latest_trade_date"
+      },
+      "sortOrder": {
+        "type": "str",
+        "description": "Sort direction (asc/desc)",
+        "required": false,
+        "default": "desc"
+      },
+      "factory": {
+        "type": "str",
+        "description": "Factory contract address",
+        "required": false
+      },
+      "limit": {
+        "type": "int",
+        "description": "Number of pairs to return (max 100)",
+        "required": false,
+        "default": 100
+      },
+      "offset": {
+        "type": "int",
+        "description": "Number of pairs to skip",
+        "required": false,
+        "default": 0
+      },
+      "filters": {
+        "type": "str",
+        "description": "Additional filter criteria",
+        "required": false
+      }
     },
-    "get_blockchain_stats": {
-        "description": "Retrieves statistics for a specific blockchain",
-        "use_case": "Analyze volume, liquidity, and token metrics for blockchain networks",
-        "inputs": {
-            "blockchain": {
-                "type": "str",
-                "description": "Blockchain name",
-                "required": true
+    "outputs": {
+      "data": {
+        "type": "array",
+        "description": "List of trading pairs with their details",
+        "items": {
+          "type": "object",
+          "properties": {
+            "price": {
+              "type": "number"
             },
-            "factory": {
-                "type": "str",
-                "description": "Factory contract address",
-                "required": false
+            "price_change_5min": {
+              "type": "number"
+            },
+            "price_change_1h": {
+              "type": "number"
+            },
+            "price_change_4h": {
+              "type": "number"
+            },
+            "price_change_24h": {
+              "type": "number"
+            },
+            "last_trade": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string",
+              "nullable": true
+            },
+            "holders_count": {
+              "type": "number"
+            },
+            "volume_1min": {
+              "type": "number"
+            },
+            "volume_5min": {
+              "type": "number"
+            },
+            "volume_15min": {
+              "type": "number"
+            },
+            "volume_1h": {
+              "type": "number"
+            },
+            "volume_4h": {
+              "type": "number"
+            },
+            "volume_12h": {
+              "type": "number"
+            },
+            "volume_24h": {
+              "type": "number"
+            },
+            "trades_1min": {
+              "type": "number"
+            },
+            "trades_5min": {
+              "type": "number"
+            },
+            "trades_15min": {
+              "type": "number"
+            },
+            "trades_1h": {
+              "type": "number"
+            },
+            "trades_4h": {
+              "type": "number"
+            },
+            "trades_12h": {
+              "type": "number"
+            },
+            "trades_24h": {
+              "type": "number"
+            },
+            "liquidity": {
+              "type": "number"
+            },
+            "pair": {
+              "type": "object",
+              "properties": {
+                "token0": {
+                  "type": "object",
+                  "properties": {
+                    "address": {
+                      "type": "string"
+                    },
+                    "price": {
+                      "type": "number"
+                    },
+                    "priceToken": {
+                      "type": "number"
+                    },
+                    "priceTokenString": {
+                      "type": "string"
+                    },
+                    "approximateReserveUSD": {
+                      "type": "number"
+                    },
+                    "approximateReserveTokenRaw": {
+                      "type": "string"
+                    },
+                    "approximateReserveToken": {
+                      "type": "number"
+                    },
+                    "symbol": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "decimals": {
+                      "type": "number"
+                    },
+                    "totalSupply": {
+                      "type": "number"
+                    },
+                    "circulatingSupply": {
+                      "type": "number"
+                    },
+                    "logo": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "chainId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "token1": {
+                  "type": "object",
+                  "properties": {
+                    "address": {
+                      "type": "string"
+                    },
+                    "price": {
+                      "type": "number"
+                    },
+                    "priceToken": {
+                      "type": "number"
+                    },
+                    "priceTokenString": {
+                      "type": "string"
+                    },
+                    "approximateReserveUSD": {
+                      "type": "number"
+                    },
+                    "approximateReserveTokenRaw": {
+                      "type": "string"
+                    },
+                    "approximateReserveToken": {
+                      "type": "number"
+                    },
+                    "symbol": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "number"
+                    },
+                    "decimals": {
+                      "type": "number"
+                    },
+                    "totalSupply": {
+                      "type": "number"
+                    },
+                    "circulatingSupply": {
+                      "type": "number"
+                    },
+                    "logo": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "chainId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "volume24h": {
+                  "type": "number"
+                },
+                "liquidity": {
+                  "type": "number"
+                },
+                "blockchain": {
+                  "type": "string"
+                },
+                "address": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "baseToken": {
+                  "type": "string"
+                },
+                "exchange": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "logo": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "factory": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "quoteToken": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "priceToken": {
+                  "type": "number"
+                },
+                "priceTokenString": {
+                  "type": "string"
+                }
+              }
             }
+          },
+          "required": [
+            "price",
+            "price_change_5min",
+            "price_change_1h",
+            "price_change_4h",
+            "price_change_24h",
+            "last_trade",
+            "created_at",
+            "holders_count",
+            "volume_1min",
+            "volume_5min",
+            "volume_15min",
+            "volume_1h",
+            "volume_4h",
+            "volume_12h",
+            "volume_24h",
+            "trades_1min",
+            "trades_5min",
+            "trades_15min",
+            "trades_1h",
+            "trades_4h",
+            "trades_12h",
+            "trades_24h",
+            "liquidity",
+            "pair"
+          ]
+        }
+      },
+      "factories": {
+        "type": "object",
+        "description": "Factory contract details",
+        "additionalProperties": {
+          "nullable": true
+        }
+      }
+    }
+  },
+  "get_blockchain_stats": {
+    "description": "Retrieves statistics for a specific blockchain",
+    "use_case": "Analyze volume, liquidity, and token metrics for blockchain networks",
+    "inputs": {
+      "blockchain": {
+        "type": "str",
+        "description": "Blockchain name",
+        "required": true
+      },
+      "factory": {
+        "type": "str",
+        "description": "Factory contract address",
+        "required": false
+      }
+    },
+    "outputs": {
+      "data": {
+        "type": "object",
+        "properties": {
+          "volume_history": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "description": "Historical volume data as [timestamp, value] pairs"
+          },
+          "volume_change_24h": {
+            "type": "number",
+            "description": "24h volume change"
+          },
+          "volume_change_total": {
+            "type": "number",
+            "description": "Total volume change",
+            "nullable": true
+          },
+          "liquidity_history": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "description": "Historical liquidity data as [timestamp, value] pairs"
+          },
+          "liquidity_change_24h": {
+            "type": "number",
+            "description": "24h liquidity change"
+          },
+          "liquidity_change_total": {
+            "type": "number",
+            "description": "Total liquidity change",
+            "nullable": true
+          },
+          "tokens_history": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "description": "Historical token count data as [timestamp, value] pairs"
+          },
+          "tokens_change_24h": {
+            "type": "number",
+            "description": "24h change in token count"
+          },
+          "tokens_change_total": {
+            "type": "number",
+            "description": "Total change in token count",
+            "nullable": true
+          }
         },
-        "outputs": {
-            "data": {
+        "required": [
+          "volume_history",
+          "volume_change_24h",
+          "volume_change_total",
+          "liquidity_history",
+          "liquidity_change_24h",
+          "liquidity_change_total",
+          "tokens_history",
+          "tokens_change_24h",
+          "tokens_change_total"
+        ]
+      }
+    }
+  },
+  "get_cefi_funding_rate": {
+    "description": "Retrieves funding rates from centralized exchanges",
+    "use_case": "Monitor and compare funding rates across different CEX platforms",
+    "inputs": {
+      "symbol": {
+        "type": "str",
+        "description": "Trading symbol",
+        "required": true
+      },
+      "quote": {
+        "type": "str",
+        "description": "Quote currency",
+        "required": false
+      }
+    },
+    "outputs": {
+      "binanceFundingRate": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "fundingTime": {
+            "type": "number"
+          },
+          "fundingRate": {
+            "type": "number"
+          },
+          "marketPrice": {
+            "type": "string"
+          },
+          "epochDurationMs": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "symbol",
+          "fundingTime",
+          "fundingRate",
+          "marketPrice",
+          "epochDurationMs"
+        ],
+        "description": "Binance funding rate data"
+      },
+      "deribitFundingRate": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "fundingTime": {
+            "type": "number"
+          },
+          "fundingRate": {
+            "type": "number"
+          },
+          "marketPrice": {
+            "type": "number"
+          },
+          "epochDurationMs": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "symbol",
+          "fundingTime",
+          "fundingRate",
+          "marketPrice",
+          "epochDurationMs"
+        ],
+        "description": "Deribit funding rate data"
+      },
+      "queryDetails": {
+        "type": "object",
+        "properties": {
+          "base": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["base", "quote"],
+        "description": "Query parameters used"
+      }
+    },
+    "required": ["queryDetails"]
+  },
+  "get_market_query": {
+    "description": "Performs a market query with various filters and sorting options",
+    "use_case": "Search and filter market data with custom criteria",
+    "inputs": {
+      "sortBy": {
+        "type": "str",
+        "description": "Field to sort by",
+        "required": false
+      },
+      "sortOrder": {
+        "type": "str",
+        "description": "Sort direction",
+        "required": false,
+        "default": "desc"
+      },
+      "filters": {
+        "type": "str",
+        "description": "Filter criteria",
+        "required": false
+      },
+      "blockchain": {
+        "type": "str",
+        "description": "Blockchain filter",
+        "required": false
+      },
+      "blockchains": {
+        "type": "str",
+        "description": "Multiple blockchain filters",
+        "required": false
+      },
+      "limit": {
+        "type": "int",
+        "description": "Results per page",
+        "required": false,
+        "default": 20
+      },
+      "offset": {
+        "type": "int",
+        "description": "Pagination offset",
+        "required": false,
+        "default": 0
+      }
+    },
+    "outputs": {
+      "data": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "logo": {
+              "type": "string",
+              "nullable": true
+            },
+            "symbol": {
+              "type": "string"
+            },
+            "liquidity": {
+              "type": "number"
+            },
+            "market_cap": {
+              "type": "number"
+            },
+            "volume": {
+              "type": "number"
+            },
+            "off_chain_volume": {
+              "type": "number"
+            },
+            "price": {
+              "type": "number"
+            },
+            "price_change_1h": {
+              "type": "number"
+            },
+            "price_change_24h": {
+              "type": "number"
+            },
+            "price_change_7d": {
+              "type": "number"
+            },
+            "contracts": {
+              "type": "array",
+              "items": {
                 "type": "object",
                 "properties": {
-                    "volume_history": {
-                        "type": "array",
-                        "description": "Historical volume data"
-                    },
-                    "volume_change_24h": {
-                        "type": "number",
-                        "description": "24h volume change"
-                    },
-                    "liquidity_history": {
-                        "type": "array",
-                        "description": "Historical liquidity data"
-                    },
-                    "tokens_history": {
-                        "type": "array",
-                        "description": "Historical token data"
-                    }
-                }
+                  "address": {
+                    "type": "string"
+                  },
+                  "blockchain": {
+                    "type": "string"
+                  },
+                  "blockchainId": {
+                    "type": "string"
+                  },
+                  "decimals": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "address",
+                  "blockchain",
+                  "blockchainId",
+                  "decimals"
+                ]
+              }
+            },
+            "id": {
+              "type": "number"
+            },
+            "rank": {
+              "type": "number",
+              "nullable": true
             }
-        }
+          },
+          "required": [
+            "name",
+            "logo",
+            "symbol",
+            "liquidity",
+            "market_cap",
+            "volume",
+            "off_chain_volume",
+            "price",
+            "price_change_1h",
+            "price_change_24h",
+            "price_change_7d",
+            "contracts",
+            "id",
+            "rank"
+          ]
+        },
+        "description": "List of market data matching query criteria"
+      }
+    }
+  },
+  "get_market_query_token": {
+    "description": "Performs a token-specific market query",
+    "use_case": "Search and filter token market data with custom criteria",
+    "inputs": {
+      "sortField": {
+        "type": "str",
+        "description": "Field to sort by",
+        "required": false
+      },
+      "sortOrder": {
+        "type": "str",
+        "description": "Sort direction",
+        "required": false,
+        "default": "desc"
+      },
+      "sortBy": {
+        "type": "str",
+        "description": "Alternative sort field",
+        "required": false
+      },
+      "filters": {
+        "type": "str",
+        "description": "Filter criteria",
+        "required": false
+      },
+      "limit": {
+        "type": "int",
+        "description": "Results per page",
+        "required": false,
+        "default": 20
+      },
+      "blockchain": {
+        "type": "str",
+        "description": "Blockchain filter",
+        "required": false
+      },
+      "blockchains": {
+        "type": "str",
+        "description": "Multiple blockchain filters",
+        "required": false
+      },
+      "unlistedAssets": {
+        "type": "bool",
+        "description": "Include unlisted assets",
+        "required": false,
+        "default": false
+      }
     },
-    "get_cefi_funding_rate": {
-        "description": "Retrieves funding rates from centralized exchanges",
-        "use_case": "Monitor and compare funding rates across different CEX platforms",
-        "inputs": {
+    "outputs": {
+      "data": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "logo": {
+              "type": "string",
+              "nullable": true
+            },
             "symbol": {
-                "type": "str",
-                "description": "Trading symbol",
-                "required": true
+              "type": "string"
             },
-            "quote": {
-                "type": "str",
-                "description": "Quote currency",
-                "required": false
-            }
-        },
-        "outputs": {
-            "binanceFundingRate": {
-                "type": "object",
-                "description": "Binance funding rate data"
-            },
-            "deribitFundingRate": {
-                "type": "object",
-                "description": "Deribit funding rate data"
-            },
-            "queryDetails": {
-                "type": "object",
-                "description": "Query parameters used"
-            }
-        }
-    },
-    "get_market_query": {
-        "description": "Performs a market query with various filters and sorting options",
-        "use_case": "Search and filter market data with custom criteria",
-        "inputs": {
-            "sortBy": {
-                "type": "str",
-                "description": "Field to sort by",
-                "required": false
-            },
-            "sortOrder": {
-                "type": "str",
-                "description": "Sort direction",
-                "required": false,
-                "default": "desc"
-            },
-            "filters": {
-                "type": "str",
-                "description": "Filter criteria",
-                "required": false
+            "address": {
+              "type": "string"
             },
             "blockchain": {
-                "type": "str",
-                "description": "Blockchain filter",
-                "required": false
+              "type": "string"
             },
-            "blockchains": {
-                "type": "str",
-                "description": "Multiple blockchain filters",
-                "required": false
+            "decimals": {
+              "type": "number"
             },
-            "limit": {
-                "type": "int",
-                "description": "Results per page",
-                "required": false,
-                "default": 20
+            "volume_24h": {
+              "type": "number"
             },
-            "offset": {
-                "type": "int",
-                "description": "Pagination offset",
-                "required": false,
-                "default": 0
+            "listed_at": {
+              "type": "string",
+              "nullable": true
+            },
+            "circulating_supply": {
+              "type": "string"
+            },
+            "total_supply": {
+              "type": "string"
+            },
+            "coingecko_id": {
+              "type": "string",
+              "nullable": true
+            },
+            "pairs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "token0": {
+                    "type": "object",
+                    "properties": {
+                      "address": {
+                        "type": "string"
+                      },
+                      "price": {
+                        "type": "number"
+                      },
+                      "priceToken": {
+                        "type": "number"
+                      },
+                      "priceTokenString": {
+                        "type": "string"
+                      },
+                      "approximateReserveUSD": {
+                        "type": "number"
+                      },
+                      "approximateReserveTokenRaw": {
+                        "type": "string"
+                      },
+                      "approximateReserveToken": {
+                        "type": "number"
+                      },
+                      "symbol": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "number"
+                      },
+                      "decimals": {
+                        "type": "number"
+                      },
+                      "totalSupply": {
+                        "type": "number"
+                      },
+                      "circulatingSupply": {
+                        "type": "number"
+                      },
+                      "logo": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "chainId": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "token1": {
+                    "type": "object",
+                    "properties": {
+                      "address": {
+                        "type": "string"
+                      },
+                      "price": {
+                        "type": "number"
+                      },
+                      "priceToken": {
+                        "type": "number"
+                      },
+                      "priceTokenString": {
+                        "type": "string"
+                      },
+                      "approximateReserveUSD": {
+                        "type": "number"
+                      },
+                      "approximateReserveTokenRaw": {
+                        "type": "string"
+                      },
+                      "approximateReserveToken": {
+                        "type": "number"
+                      },
+                      "symbol": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "number"
+                      },
+                      "decimals": {
+                        "type": "number"
+                      },
+                      "totalSupply": {
+                        "type": "number"
+                      },
+                      "circulatingSupply": {
+                        "type": "number"
+                      },
+                      "logo": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "chainId": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "volume24h": {
+                    "type": "number"
+                  },
+                  "liquidity": {
+                    "type": "number"
+                  },
+                  "blockchain": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "baseToken": {
+                    "type": "string"
+                  },
+                  "exchange": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "logo": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "factory": {
+                    "type": "string"
+                  },
+                  "quoteToken": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "priceToken": {
+                    "type": "number"
+                  },
+                  "priceTokenString": {
+                    "type": "string"
+                  }
+                }
+              }
             }
+          },
+          "required": [
+            "name",
+            "logo",
+            "symbol",
+            "address",
+            "blockchain",
+            "decimals",
+            "volume_24h",
+            "listed_at",
+            "circulating_supply",
+            "total_supply",
+            "coingecko_id",
+            "pairs"
+          ]
         },
-        "outputs": {
-            "type": "array",
-            "description": "List of market data matching query criteria"
-        }
-    },
-    "get_market_query_token": {
-        "description": "Performs a token-specific market query",
-        "use_case": "Search and filter token market data with custom criteria",
-        "inputs": {
-            "sortField": {
-                "type": "str",
-                "description": "Field to sort by",
-                "required": false
-            },
-            "sortOrder": {
-                "type": "str",
-                "description": "Sort direction",
-                "required": false,
-                "default": "desc"
-            },
-            "sortBy": {
-                "type": "str",
-                "description": "Alternative sort field",
-                "required": false
-            },
-            "filters": {
-                "type": "str",
-                "description": "Filter criteria",
-                "required": false
-            },
-            "limit": {
-                "type": "int",
-                "description": "Results per page",
-                "required": false,
-                "default": 20
-            },
-            "blockchain": {
-                "type": "str",
-                "description": "Blockchain filter",
-                "required": false
-            },
-            "blockchains": {
-                "type": "str",
-                "description": "Multiple blockchain filters",
-                "required": false
-            },
-            "unlistedAssets": {
-                "type": "bool",
-                "description": "Include unlisted assets",
-                "required": false,
-                "default": false
-            }
-        },
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "List of tokens matching query criteria"
-            }
-        }
-    },
+        "description": "List of tokens matching query criteria"
+      }
+    }
+  },
     "get_market_token_vs_market": {
         "description": "Compares token performance against market metrics",
         "use_case": "Analyze token performance relative to market benchmarks",
@@ -244,125 +916,207 @@
         "outputs": {
             "data": {
                 "type": "array",
+                "items": {
+                    "anyOf": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "marketCapUSD": {
+                                    "type": "number"
+                                },
+                                "priceUSD": {
+                                    "type": "number",
+                                    "nullable": true
+                                },
+                                "priceChange1hPercent": {
+                                    "type": "number"
+                                },
+                                "priceChange24hPercent": {
+                                    "type": "number"
+                                }, 
+                                "priceChange7dPercent": {
+                                    "type": "number"
+                                },
+                                "priceChange1mPercent": {
+                                    "type": "number"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "symbol": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "marketCapUSD",
+                                "priceUSD",
+                                "priceChange1hPercent",
+                                "priceChange24hPercent",
+                                "priceChange7dPercent",
+                                "priceChange1mPercent",
+                                "name",
+                                "symbol"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "marketCapUSD": {
+                                    "type": "number"
+                                },
+                                "marketCapChange24hPercent": {
+                                    "type": "number"
+                                },
+                                "marketCapChange7dPercent": {
+                                    "type": "number"
+                                },
+                                "marketCapChange1mPercent": {
+                                    "type": "number"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "volumeUSD": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "id",
+                                "marketCapUSD",
+                                "marketCapChange24hPercent",
+                                "marketCapChange7dPercent",
+                                "marketCapChange1mPercent",
+                                "name",
+                                "volumeUSD"
+                            ]
+                        },
+                        {
+                            "nullable": true
+                        }
+                    ]
+                },
                 "description": "Comparative market data"
             }
         }
     },
-    "get_market_data": {
-        "description": "Fetches comprehensive market data for a specific cryptocurrency or token",
-        "use_case": "Used to get current market metrics, price data, and trading information for a specific asset",
-        "inputs": {
-            "asset": {
-                "type": "str",
-                "description": "Asset name (e.g., 'bitcoin')",
-                "required": false
+  "get_market_data": {
+    "description": "Fetches comprehensive market data for a specific cryptocurrency or token",
+    "use_case": "Used to get current market metrics, price data, and trading information for a specific asset",
+    "inputs": {
+      "asset": {
+        "type": "str",
+        "description": "Asset name (e.g., 'bitcoin')",
+        "required": false
+      },
+      "symbol": {
+        "type": "str",
+        "description": "Trading symbol (e.g., 'BTC')",
+        "required": false
+      },
+      "blockchain": {
+        "type": "str",
+        "description": "Blockchain name (e.g., 'ethereum')",
+        "required": false
+      },
+      "id": {
+        "type": "int",
+        "description": "Unique asset identifier",
+        "required": false
+      }
+    },
+    "outputs": {
+      "data": {
+        "type": "object",
+        "properties": {
+          "price": {
+            "type": "number",
+            "description": "Current price in USD"
+          },
+          "market_cap": {
+            "type": "number",
+            "description": "Market capitalization in USD"
+          },
+          "volume": {
+            "type": "number",
+            "description": "24-hour trading volume"
+          }
+        }
+      }
+    }
+  },
+  "get_all_assets": {
+    "description": "Retrieves data for all assets listed on the platform",
+    "use_case": "Used to get a comprehensive list of all available assets and their basic information",
+    "inputs": {
+      "fields": {
+        "type": "str",
+        "description": "Comma-separated list of fields to include in the response",
+        "required": false,
+        "default": ""
+      }
+    },
+    "outputs": {
+      "data": {
+        "type": "array",
+        "description": "List of assets",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "Asset ID"
+            },
+            "name": {
+              "type": "string",
+              "description": "Asset name"
             },
             "symbol": {
-                "type": "str",
-                "description": "Trading symbol (e.g., 'BTC')",
-                "required": false
+              "type": "string",
+              "description": "Trading symbol"
             },
-            "blockchain": {
-                "type": "str",
-                "description": "Blockchain name (e.g., 'ethereum')",
-                "required": false
-            },
-            "id": {
-                "type": "int",
-                "description": "Unique asset identifier",
-                "required": false
+            "logo": {
+              "type": "string",
+              "description": "Logo URL"
             }
-        },
-        "outputs": {
-            "data": {
-                "type": "object",
-                "properties": {
-                    "price": {
-                        "type": "number",
-                        "description": "Current price in USD"
-                    },
-                    "market_cap": {
-                        "type": "number",
-                        "description": "Market capitalization in USD"
-                    },
-                    "volume": {
-                        "type": "number",
-                        "description": "24-hour trading volume"
-                    }
-                }
-            }
+          }
         }
+      }
+    }
+  },
+  "get_market_nft": {
+    "description": "Retrieves market data for NFT assets",
+    "use_case": "Track NFT prices and market activity",
+    "inputs": {
+      "asset": {
+        "type": "<class 'str'>",
+        "description": "NFT asset identifier",
+        "required": true
+      },
+      "chain": {
+        "type": "<class 'str'>",
+        "description": "Blockchain name",
+        "required": true
+      }
     },
-    "get_all_assets": {
-        "description": "Retrieves data for all assets listed on the platform",
-        "use_case": "Used to get a comprehensive list of all available assets and their basic information",
-        "inputs": {
-            "fields": {
-                "type": "str",
-                "description": "Comma-separated list of fields to include in the response",
-                "required": false,
-                "default": ""
-            }
-        },
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "List of assets",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "id": {
-                            "type": "number",
-                            "description": "Asset ID"
-                        },
-                        "name": {
-                            "type": "string",
-                            "description": "Asset name"
-                        },
-                        "symbol": {
-                            "type": "string",
-                            "description": "Trading symbol"
-                        },
-                        "logo": {
-                            "type": "string",
-                            "description": "Logo URL"
-                        }
-                    }
-                }
-            }
+    "outputs": {
+      "data": {
+        "type": "object",
+        "properties": {
+          "price": {
+            "type": "number",
+            "description": "NFT price in USD"
+          },
+          "priceETH": {
+            "type": "number",
+            "description": "NFT price in ETH"
+          }
         }
-    },
-    "get_market_nft": {
-        "description": "Retrieves market data for NFT assets",
-        "use_case": "Track NFT prices and market activity",
-        "inputs": {
-            "asset": {
-                "type": "<class 'str'>",
-                "description": "NFT asset identifier",
-                "required": true
-            },
-            "chain": {
-                "type": "<class 'str'>",
-                "description": "Blockchain name",
-                "required": true
-            }
-        },
-        "outputs": {
-            "data": {
-                "type": "object",
-                "properties": {
-                    "price": {
-                        "type": "number",
-                        "description": "NFT price in USD"
-                    },
-                    "priceETH": {
-                        "type": "number",
-                        "description": "NFT price in ETH"
-                    }
-                }
-            }
-        }
-    },
+      }
+    }
+  },
     "get_market_multi_data": {
         "description": "Fetches market data for multiple assets in a single request",
         "use_case": "Efficient way to monitor multiple assets simultaneously, perfect for portfolio tracking",
@@ -397,124 +1151,386 @@
         "outputs": {
             "data": {
                 "type": "object",
-                "properties": {
-                    "price": {
-                        "type": "number",
-                        "description": "Current price in USD"
+                "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                        "key": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "number"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "symbol": {
+                            "type": "string"
+                        },
+                        "decimals": {
+                            "type": "number",
+                            "nullable": true
+                        },
+                        "logo": {
+                            "type": "string"
+                        },
+                        "rank": {
+                            "type": "number",
+                            "nullable": true
+                        },
+                        "price": {
+                            "type": "number"
+                        },
+                        "market_cap": {
+                            "type": "number"
+                        },
+                        "market_cap_diluted": {
+                            "type": "number"
+                        },
+                        "volume": {
+                            "type": "number"
+                        },
+                        "volume_change_24h": {
+                            "type": "number"
+                        },
+                        "volume_7d": {
+                            "type": "number"
+                        },
+                        "liquidity": {
+                            "type": "number"
+                        },
+                        "ath": {
+                            "type": "number"
+                        },
+                        "atl": {
+                            "type": "number"
+                        },
+                        "off_chain_volume": {
+                            "type": "number"
+                        },
+                        "is_listed": {
+                            "type": "boolean"
+                        },
+                        "price_change_1h": {
+                            "type": "number"
+                        },
+                        "price_change_24h": {
+                            "type": "number"
+                        },
+                        "price_change_7d": {
+                            "type": "number"
+                        },
+                        "price_change_1m": {
+                            "type": "number"
+                        },
+                        "price_change_1y": {
+                            "type": "number"
+                        },
+                        "total_supply": {
+                            "type": "number"
+                        },
+                        "circulating_supply": {
+                            "type": "number"
+                        },
+                        "contracts": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "blockchainId": {
+                                        "type": "string"
+                                    },
+                                    "blockchain": {
+                                        "type": "string"
+                                    },
+                                    "decimals": {
+                                        "type": "number"
+                                    }
+                                },
+                                "required": [
+                                    "address",
+                                    "blockchainId",
+                                    "blockchain",
+                                    "decimals"
+                                ]
+                            }
+                        }
                     },
-                    "market_cap": {
-                        "type": "number",
-                        "description": "Market capitalization"
+                    "required": [
+                        "key",
+                        "id",
+                        "name",
+                        "symbol",
+                        "decimals",
+                        "logo",
+                        "rank",
+                        "price",
+                        "market_cap",
+                        "market_cap_diluted",
+                        "volume",
+                        "volume_change_24h",
+                        "volume_7d",
+                        "liquidity",
+                        "ath",
+                        "atl",
+                        "off_chain_volume",
+                        "is_listed",
+                        "price_change_1h",
+                        "price_change_24h",
+                        "price_change_7d",
+                        "price_change_1m",
+                        "price_change_1y",
+                        "total_supply",
+                        "circulating_supply",
+                        "contracts"
+                    ]
+                }
+            },
+            "dataArray": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "key": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "number"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "symbol": {
+                            "type": "string"
+                        },
+                        "decimals": {
+                            "type": "number",
+                            "nullable": true
+                        },
+                        "logo": {
+                            "type": "string"
+                        },
+                        "rank": {
+                            "type": "number",
+                            "nullable": true
+                        },
+                        "price": {
+                            "type": "number"
+                        },
+                        "market_cap": {
+                            "type": "number"
+                        },
+                        "market_cap_diluted": {
+                            "type": "number"
+                        },
+                        "volume": {
+                            "type": "number"
+                        },
+                        "volume_change_24h": {
+                            "type": "number"
+                        },
+                        "volume_7d": {
+                            "type": "number"
+                        },
+                        "liquidity": {
+                            "type": "number"
+                        },
+                        "ath": {
+                            "type": "number"
+                        },
+                        "atl": {
+                            "type": "number"
+                        },
+                        "off_chain_volume": {
+                            "type": "number"
+                        },
+                        "is_listed": {
+                            "type": "boolean"
+                        },
+                        "price_change_1h": {
+                            "type": "number"
+                        },
+                        "price_change_24h": {
+                            "type": "number"
+                        },
+                        "price_change_7d": {
+                            "type": "number"
+                        },
+                        "price_change_1m": {
+                            "type": "number"
+                        },
+                        "price_change_1y": {
+                            "type": "number"
+                        },
+                        "total_supply": {
+                            "type": "number"
+                        },
+                        "circulating_supply": {
+                            "type": "number"
+                        },
+                        "contracts": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "blockchainId": {
+                                        "type": "string"
+                                    },
+                                    "blockchain": {
+                                        "type": "string"
+                                    },
+                                    "decimals": {
+                                        "type": "number"
+                                    }
+                                },
+                                "required": [
+                                    "address",
+                                    "blockchainId",
+                                    "blockchain",
+                                    "decimals"
+                                ]
+                            }
+                        }
                     },
-                    "volume": {
-                        "type": "number",
-                        "description": "24h trading volume"
-                    }
+                    "required": [
+                        "key",
+                        "id",
+                        "name",
+                        "symbol",
+                        "decimals",
+                        "logo",
+                        "rank",
+                        "price",
+                        "market_cap",
+                        "market_cap_diluted",
+                        "volume",
+                        "volume_change_24h",
+                        "volume_7d",
+                        "liquidity",
+                        "ath",
+                        "atl",
+                        "off_chain_volume",
+                        "is_listed",
+                        "price_change_1h",
+                        "price_change_24h",
+                        "price_change_7d",
+                        "price_change_1m",
+                        "price_change_1y",
+                        "total_supply",
+                        "circulating_supply",
+                        "contracts"
+                    ]
                 }
             }
-        }
-    },
-    "get_market_multi_history": {
-        "description": "Retrieves historical market data for multiple assets",
-        "use_case": "Compare historical performance of multiple assets",
-        "inputs": {
-            "assets": {
-                "type": "str",
-                "description": "Comma-separated list of asset names",
-                "required": false
-            },
-            "period": {
-                "type": "str",
-                "description": "Time period for data",
-                "required": false
-            },
-            "symbols": {
-                "type": "str",
-                "description": "Comma-separated list of symbols",
-                "required": false
-            },
-            "blockchains": {
-                "type": "str",
-                "description": "Parameter blockchains",
-                "required": false
-            },
-            "ids": {
-                "type": "str",
-                "description": "Parameter ids",
-                "required": false
-            },
-            "from_timestamp": {
-                "type": "str",
-                "description": "Parameter from_timestamp",
-                "required": false
-            },
-            "froms": {
-                "type": "str",
-                "description": "Parameter froms",
-                "required": false
-            },
-            "to_timestamp": {
-                "type": "str",
-                "description": "Parameter to_timestamp",
-                "required": false
-            },
-            "tos": {
-                "type": "str",
-                "description": "Parameter tos",
-                "required": false
-            }
         },
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "Historical market data for each asset"
-            }
-        }
+        "required": ["data", "dataArray"]
     },
-    "get_market_sparkline": {
-        "description": "Retrieves sparkline data for market visualization",
-        "use_case": "Generate price charts and visual representations",
-        "inputs": {
-            "asset": {
-                "type": "str",
-                "description": "Asset name",
-                "required": false
-            },
-            "blockchain": {
-                "type": "str",
-                "description": "Parameter blockchain",
-                "required": false
-            },
-            "symbol": {
-                "type": "str",
-                "description": "Asset symbol",
-                "required": false
-            },
-            "id": {
-                "type": "str",
-                "description": "Parameter id",
-                "required": false
-            },
-            "time_frame": {
-                "type": "<class 'str'>",
-                "description": "Time frame for data",
-                "required": false,
-                "default": "24h"
-            },
-            "png": {
-                "type": "<class 'str'>",
-                "description": "Parameter png",
-                "required": false,
-                "default": "false"
-            }
-        },
-        "outputs": {
-            "url": {
-                "type": "string",
-                "description": "Sparkline data or image URL"
-            }
-        }
+  "get_market_multi_history": {
+    "description": "Retrieves historical market data for multiple assets",
+    "use_case": "Compare historical performance of multiple assets",
+    "inputs": {
+      "assets": {
+        "type": "str",
+        "description": "Comma-separated list of asset names",
+        "required": false
+      },
+      "period": {
+        "type": "str",
+        "description": "Time period for data",
+        "required": false
+      },
+      "symbols": {
+        "type": "str",
+        "description": "Comma-separated list of symbols",
+        "required": false
+      },
+      "blockchains": {
+        "type": "str",
+        "description": "Parameter blockchains",
+        "required": false
+      },
+      "ids": {
+        "type": "str",
+        "description": "Parameter ids",
+        "required": false
+      },
+      "from_timestamp": {
+        "type": "str",
+        "description": "Parameter from_timestamp",
+        "required": false
+      },
+      "froms": {
+        "type": "str",
+        "description": "Parameter froms",
+        "required": false
+      },
+      "to_timestamp": {
+        "type": "str",
+        "description": "Parameter to_timestamp",
+        "required": false
+      },
+      "tos": {
+        "type": "str",
+        "description": "Parameter tos",
+        "required": false
+      }
     },
+    "outputs": {
+      "data": {
+        "type": "array",
+        "description": "Historical market data for each asset"
+      }
+    }
+  },
+  "get_market_sparkline": {
+    "description": "Retrieves sparkline data for market visualization",
+    "use_case": "Generate price charts and visual representations",
+    "inputs": {
+      "asset": {
+        "type": "str",
+        "description": "Asset name",
+        "required": false
+      },
+      "blockchain": {
+        "type": "str",
+        "description": "Parameter blockchain",
+        "required": false
+      },
+      "symbol": {
+        "type": "str",
+        "description": "Asset symbol",
+        "required": false
+      },
+      "id": {
+        "type": "str",
+        "description": "Parameter id",
+        "required": false
+      },
+      "time_frame": {
+        "type": "<class 'str'>",
+        "description": "Time frame for data",
+        "required": false,
+        "default": "24h"
+      },
+      "png": {
+        "type": "<class 'str'>",
+        "description": "Parameter png",
+        "required": false,
+        "default": "false"
+      }
+    },
+    "outputs": {
+      "url": {
+        "type": "string",
+        "description": "Sparkline data or image URL"
+      }
+    }
+  },
     "get_market_pairs": {
         "description": "Retrieves trading pair information",
         "use_case": "Used to get detailed information about trading pairs including liquidity, volume, and price data",
@@ -563,389 +1579,719 @@
             }
         },
         "outputs": {
-            "pairs": {
-                "type": "array",
-                "description": "List of trading pairs"
-            }
-        }
-    },
-    "get_market_trades_pair": {
-        "description": "Retrieves trade history for a specific pair",
-        "use_case": "Analyze trading activity and price movements for a trading pair",
-        "inputs": {
-            "blockchain": {
-                "type": "str",
-                "description": "Blockchain name",
-                "required": false
-            },
-            "asset": {
-                "type": "str",
-                "description": "Asset name",
-                "required": false
-            },
-            "address": {
-                "type": "str",
-                "description": "Parameter address",
-                "required": false
-            },
-            "symbol": {
-                "type": "str",
-                "description": "Parameter symbol",
-                "required": false
-            },
-            "limit": {
-                "type": "int",
-                "description": "Number of trades to return",
-                "required": false
-            },
-            "amount": {
-                "type": "int",
-                "description": "Parameter amount",
-                "required": false
-            },
-            "sort_by": {
-                "type": "str",
-                "description": "Parameter sort_by",
-                "required": false
-            },
-            "sort_order": {
-                "type": "<class 'str'>",
-                "description": "Parameter sort_order",
-                "required": false,
-                "default": "desc"
-            },
-            "offset": {
-                "type": "<class 'int'>",
-                "description": "Parameter offset",
-                "required": false,
-                "default": 0
-            }
-        },
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "List of trades"
-            }
-        }
-    },
-    "get_metadata_categories": {
-        "description": "Retrieves metadata categories",
-        "use_case": "Get organized asset categories and market segments",
-        "inputs": {},
-        "outputs": {
-            "type": "array",
-            "description": "List of categories with market data"
-        }
-    },
-    "get_wallet_transactions": {
-        "description": "Retrieves transaction history for a wallet",
-        "use_case": "Track wallet activity and analyze transaction patterns",
-        "inputs": {
-            "wallet": {
-                "type": "str",
-                "description": "Wallet address",
-                "required": false
-            },
-            "wallets": {
-                "type": "Union[str, List[str, NoneType",
-                "description": "Parameter wallets",
-                "required": false
-            },
-            "limit": {
-                "type": "str",
-                "description": "Number of transactions",
-                "required": false
-            },
-            "offset": {
-                "type": "str",
-                "description": "Parameter offset",
-                "required": false
-            },
-            "page": {
-                "type": "str",
-                "description": "Parameter page",
-                "required": false
-            },
-            "order": {
-                "type": "str",
-                "description": "Parameter order",
-                "required": false
-            },
-            "cache": {
-                "type": "str",
-                "description": "Parameter cache",
-                "required": false
-            },
-            "stale": {
-                "type": "str",
-                "description": "Parameter stale",
-                "required": false
-            },
-            "recheck_contract": {
-                "type": "str",
-                "description": "Parameter recheck_contract",
-                "required": false
-            },
-            "from_timestamp": {
-                "type": "str",
-                "description": "Parameter from_timestamp",
-                "required": false
-            },
-            "to_timestamp": {
-                "type": "str",
-                "description": "Parameter to_timestamp",
-                "required": false
-            },
-            "asset": {
-                "type": "str",
-                "description": "Parameter asset",
-                "required": false
-            },
-            "trades": {
-                "type": "str",
-                "description": "Parameter trades",
-                "required": false
-            },
-            "blockchains": {
-                "type": "Union[str, List[str, NoneType",
-                "description": "Parameter blockchains",
-                "required": false
-            },
-            "unlisted_assets": {
-                "type": "str",
-                "description": "Parameter unlisted_assets",
-                "required": false
-            },
-            "only_assets": {
-                "type": "str",
-                "description": "Parameter only_assets",
-                "required": false
-            },
-            "pagination": {
-                "type": "str",
-                "description": "Parameter pagination",
-                "required": false
-            }
-        },
-        "outputs": {
-            "data": {
-                "type": "object",
-                "description": "Transaction history and details"
-            }
-        }
-    },
-    "get_wallet_nfts": {
-        "description": "Retrieves NFTs owned by a wallet",
-        "use_case": "Track NFT holdings and monitor NFT portfolio",
-        "inputs": {
-            "wallet": {
-                "type": "<class 'str'>",
-                "description": "Wallet address",
-                "required": true
-            },
-            "blockchains": {
-                "type": "str",
-                "description": "Comma-separated blockchain names",
-                "required": false
-            },
-            "page": {
-                "type": "<class 'str'>",
-                "description": "Parameter page",
-                "required": false,
-                "default": "1"
-            },
-            "offset": {
-                "type": "<class 'str'>",
-                "description": "Parameter offset",
-                "required": false,
-                "default": "0"
-            },
-            "limit": {
-                "type": "<class 'str'>",
-                "description": "Parameter limit",
-                "required": false,
-                "default": "100"
-            },
-            "pagination": {
-                "type": "<class 'str'>",
-                "description": "Parameter pagination",
-                "required": false,
-                "default": "false"
-            }
-        },
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "List of owned NFTs"
-            }
-        }
-    },
-    "get_blockchains": {
-        "description": "Retrieves information about all supported blockchains",
-        "use_case": "Get comprehensive details about blockchain networks including RPCs, contracts, and configuration",
-        "inputs": {},
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "List of blockchain data",
-                "items": {
-                    "name": {
-                        "type": "string",
-                        "description": "Blockchain name"
-                    },
-                    "rpcs": {
-                        "type": "array",
-                        "description": "List of RPC endpoints"
-                    },
-                    "chainId": {
-                        "type": "string",
-                        "description": "Chain identifier"
-                    },
-                    "explorer": {
-                        "type": "string",
-                        "description": "Block explorer URL"
-                    }
-                }
-            }
-        }
-    },
-    "get_feed_create": {
-        "description": "Creates a new data feed",
-        "use_case": "Set up custom data feeds for asset tracking",
-        "inputs": {
-            "quote_id": {
-                "type": "int",
-                "description": "Quote asset identifier",
-                "required": false
-            },
-            "asset_id": {
-                "type": "int",
-                "description": "Asset identifier",
-                "required": false
-            }
-        },
-        "outputs": {
-            "success": {
-                "type": "boolean",
-                "description": "Feed creation status"
-            }
-        }
-    },
-    "get_market_history": {
-        "description": "Retrieves historical market data for an asset",
-        "use_case": "Analyze price history and market trends",
-        "inputs": {
-            "asset": {
-                "type": "str",
-                "description": "Asset name",
-                "required": false
-            },
-            "symbol": {
-                "type": "str",
-                "description": "Asset symbol",
-                "required": false
-            },
-            "blockchain": {
-                "type": "str",
-                "description": "Parameter blockchain",
-                "required": false
-            },
-            "period": {
-                "type": "str",
-                "description": "Time period",
-                "required": false
-            },
-            "id": {
-                "type": "int",
-                "description": "Parameter id",
-                "required": false
-            },
-            "from_timestamp": {
-                "type": "int",
-                "description": "Parameter from_timestamp",
-                "required": false,
-                "default": 0
-            },
-            "to_timestamp": {
-                "type": "int",
-                "description": "Parameter to_timestamp",
-                "required": false
-            }
-        },
-        "outputs": {
             "data": {
                 "type": "object",
                 "properties": {
-                    "price_history": {
+                    "pairs": {
                         "type": "array",
-                        "description": "Historical price points"
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "token0": {
+                                    "type": "object",
+                                    "properties": {
+                                        "address": {
+                                            "type": "string"
+                                        },
+                                        "price": {
+                                            "type": "number"
+                                        },
+                                        "priceToken": {
+                                            "type": "number"
+                                        },
+                                        "priceTokenString": {
+                                            "type": "string"
+                                        },
+                                        "approximateReserveUSD": {
+                                            "type": "number"
+                                        },
+                                        "approximateReserveTokenRaw": {
+                                            "type": "string"
+                                        },
+                                        "approximateReserveToken": {
+                                            "type": "number"
+                                        },
+                                        "symbol": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "type": "number"
+                                        },
+                                        "decimals": {
+                                            "type": "number"
+                                        },
+                                        "totalSupply": {
+                                            "type": "number"
+                                        },
+                                        "circulatingSupply": {
+                                            "type": "number"
+                                        },
+                                        "logo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "chainId": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "address",
+                                        "price",
+                                        "priceToken",
+                                        "priceTokenString",
+                                        "approximateReserveUSD",
+                                        "approximateReserveTokenRaw",
+                                        "approximateReserveToken",
+                                        "symbol",
+                                        "name",
+                                        "id",
+                                        "decimals",
+                                        "totalSupply",
+                                        "circulatingSupply",
+                                        "logo",
+                                        "chainId"
+                                    ]
+                                },
+                                "token1": {
+                                    "type": "object",
+                                    "properties": {
+                                        "address": {
+                                            "type": "string"
+                                        },
+                                        "price": {
+                                            "type": "number"
+                                        },
+                                        "priceToken": {
+                                            "type": "number"
+                                        },
+                                        "priceTokenString": {
+                                            "type": "string"
+                                        },
+                                        "approximateReserveUSD": {
+                                            "type": "number"
+                                        },
+                                        "approximateReserveTokenRaw": {
+                                            "type": "string"
+                                        },
+                                        "approximateReserveToken": {
+                                            "type": "number"
+                                        },
+                                        "symbol": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "type": "number"
+                                        },
+                                        "decimals": {
+                                            "type": "number"
+                                        },
+                                        "totalSupply": {
+                                            "type": "number"
+                                        },
+                                        "circulatingSupply": {
+                                            "type": "number"
+                                        },
+                                        "logo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "chainId": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "address",
+                                        "price",
+                                        "priceToken",
+                                        "priceTokenString",
+                                        "approximateReserveUSD",
+                                        "approximateReserveTokenRaw",
+                                        "approximateReserveToken",
+                                        "symbol",
+                                        "name",
+                                        "id",
+                                        "decimals",
+                                        "totalSupply",
+                                        "circulatingSupply",
+                                        "logo",
+                                        "chainId"
+                                    ]
+                                },
+                                "volume24h": {
+                                    "type": "number"
+                                },
+                                "liquidity": {
+                                    "type": "number"
+                                },
+                                "blockchain": {
+                                    "type": "string"
+                                },
+                                "address": {
+                                    "type": "string"
+                                },
+                                "createdAt": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "baseToken": {
+                                    "type": "string"
+                                },
+                                "exchange": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "logo": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "logo"
+                                    ]
+                                },
+                                "factory": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "quoteToken": {
+                                    "type": "string"
+                                },
+                                "price": {
+                                    "type": "number"
+                                },
+                                "priceToken": {
+                                    "type": "number"
+                                },
+                                "priceTokenString": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "token0",
+                                "token1",
+                                "volume24h",
+                                "liquidity",
+                                "blockchain",
+                                "address",
+                                "createdAt",
+                                "type",
+                                "baseToken",
+                                "exchange",
+                                "factory",
+                                "quoteToken",
+                                "price",
+                                "priceToken",
+                                "priceTokenString"
+                            ]
+                        }
                     }
-                }
+                },
+                "required": ["pairs"],
+                "description": "Trading pair details"
             }
         }
     },
-    "get_market_token_holders": {
-        "description": "Retrieves information about token holders",
-        "use_case": "Analyze token distribution and holder statistics",
-        "inputs": {
-            "blockchain": {
-                "type": "str",
-                "description": "Blockchain name",
-                "required": false
+  "get_market_trades_pair": {
+    "description": "Retrieves trade history for a specific pair",
+    "use_case": "Analyze trading activity and price movements for a trading pair",
+    "inputs": {
+      "blockchain": {
+        "type": "str",
+        "description": "Blockchain name",
+        "required": false
+      },
+      "asset": {
+        "type": "str",
+        "description": "Asset name",
+        "required": false
+      },
+      "address": {
+        "type": "str",
+        "description": "Parameter address",
+        "required": false
+      },
+      "symbol": {
+        "type": "str",
+        "description": "Parameter symbol",
+        "required": false
+      },
+      "limit": {
+        "type": "int",
+        "description": "Number of trades to return",
+        "required": false
+      },
+      "amount": {
+        "type": "int",
+        "description": "Parameter amount",
+        "required": false
+      },
+      "sort_by": {
+        "type": "str",
+        "description": "Parameter sort_by",
+        "required": false
+      },
+      "sort_order": {
+        "type": "<class 'str'>",
+        "description": "Parameter sort_order",
+        "required": false,
+        "default": "desc"
+      },
+      "offset": {
+        "type": "<class 'int'>",
+        "description": "Parameter offset",
+        "required": false,
+        "default": 0
+      }
+    },
+    "outputs": {
+      "data": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "timestamp": {
+              "type": "number",
+              "description": "Trade timestamp"
             },
-            "asset": {
-                "type": "str",
-                "description": "Asset name",
-                "required": false
+            "transaction_hash": {
+              "type": "string",
+              "description": "Transaction hash"
             },
-            "symbol": {
-                "type": "str",
-                "description": "Asset symbol",
-                "required": false
+            "amount0": {
+              "type": "number",
+              "description": "Amount of token0"
             },
-            "limit": {
-                "type": "<class 'int'>",
-                "description": "Number of holders to return",
-                "required": false,
-                "default": 20
+            "amount1": {
+              "type": "number",
+              "description": "Amount of token1"
             },
-            "offset": {
-                "type": "<class 'int'>",
-                "description": "Parameter offset",
-                "required": false,
-                "default": 0
+            "price": {
+              "type": "number",
+              "description": "Trade price in USD"
+            },
+            "amount_usd": {
+              "type": "number",
+              "description": "Trade amount in USD"
+            },
+            "buyer": {
+              "type": "string",
+              "description": "Buyer address"
+            },
+            "seller": {
+              "type": "string",
+              "description": "Seller address"
+            },
+            "is_buy": {
+              "type": "boolean",
+              "description": "True if buy, false if sell"
+            },
+            "block_number": {
+              "type": "number",
+              "description": "Block number of transaction"
             }
+          },
+          "required": [
+            "timestamp",
+            "transaction_hash",
+            "amount0",
+            "amount1",
+            "price",
+            "amount_usd",
+            "buyer",
+            "seller",
+            "is_buy",
+            "block_number"
+          ]
         },
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "List of token holders"
+        "description": "List of trades with detailed information"
+      }
+    }
+  },
+  "get_metadata_categories": {
+    "description": "Retrieves metadata categories",
+    "use_case": "Get organized asset categories and market segments",
+    "inputs": {},
+    "outputs": {
+      "data": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
             },
-            "total_count": {
-                "type": "integer",
-                "description": "Total number of holders"
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "marketCapUSD": {
+              "type": "number"
+            },
+            "marketCapChangePercent24h": {
+              "type": "number"
+            },
+            "volumeUSD": {
+              "type": "number"
+            },
+            "volumeChangePercent24h": {
+              "type": "number"
+            },
+            "numberOfAssets": {
+              "type": "number"
+            },
+            "averagePrice": {
+              "type": "number"
+            },
+            "averagePriceChangePercent24h": {
+              "type": "number"
+            },
+            "averagePriceChangePercent7d": {
+              "type": "number"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
-        }
+          },
+          "required": [
+            "name",
+            "description",
+            "marketCapUSD",
+            "marketCapChangePercent24h",
+            "volumeUSD",
+            "volumeChangePercent24h",
+            "numberOfAssets",
+            "averagePrice",
+            "averagePriceChangePercent24h",
+            "averagePriceChangePercent7d",
+            "tags"
+          ]
+        },
+        "description": "List of categories with market data"
+      }
+    }
+  },
+  "get_wallet_transactions": {
+    "description": "Retrieves transaction history for a wallet",
+    "use_case": "Track wallet activity and analyze transaction patterns",
+    "inputs": {
+      "wallet": {
+        "type": "str",
+        "description": "Wallet address",
+        "required": false
+      },
+      "wallets": {
+        "type": "Union[str, List[str, NoneType",
+        "description": "Parameter wallets",
+        "required": false
+      },
+      "limit": {
+        "type": "str",
+        "description": "Number of transactions",
+        "required": false
+      },
+      "offset": {
+        "type": "str",
+        "description": "Parameter offset",
+        "required": false
+      },
+      "page": {
+        "type": "str",
+        "description": "Parameter page",
+        "required": false
+      },
+      "order": {
+        "type": "str",
+        "description": "Parameter order",
+        "required": false
+      },
+      "cache": {
+        "type": "str",
+        "description": "Parameter cache",
+        "required": false
+      },
+      "stale": {
+        "type": "str",
+        "description": "Parameter stale",
+        "required": false
+      },
+      "recheck_contract": {
+        "type": "str",
+        "description": "Parameter recheck_contract",
+        "required": false
+      },
+      "from_timestamp": {
+        "type": "str",
+        "description": "Parameter from_timestamp",
+        "required": false
+      },
+      "to_timestamp": {
+        "type": "str",
+        "description": "Parameter to_timestamp",
+        "required": false
+      },
+      "asset": {
+        "type": "str",
+        "description": "Parameter asset",
+        "required": false
+      },
+      "trades": {
+        "type": "str",
+        "description": "Parameter trades",
+        "required": false
+      },
+      "blockchains": {
+        "type": "Union[str, List[str, NoneType",
+        "description": "Parameter blockchains",
+        "required": false
+      },
+      "unlisted_assets": {
+        "type": "str",
+        "description": "Parameter unlisted_assets",
+        "required": false
+      },
+      "only_assets": {
+        "type": "str",
+        "description": "Parameter only_assets",
+        "required": false
+      },
+      "pagination": {
+        "type": "str",
+        "description": "Parameter pagination",
+        "required": false
+      }
     },
-    "get_market_total": {
-        "description": "Retrieves total market statistics",
-        "use_case": "Monitor overall market metrics and trends",
-        "inputs": {},
-        "outputs": {
-            "market_cap_history": {
-                "type": "array",
-                "description": "Historical market cap data"
-            },
-            "market_cap_change_24h": {
-                "type": "string",
-                "description": "24-hour market cap change"
-            },
-            "btc_dominance_history": {
-                "type": "array",
-                "description": "Bitcoin dominance history"
-            }
-        }
+    "outputs": {
+      "data": {
+        "type": "object",
+        "description": "Transaction history and details"
+      }
+    }
+  },
+  "get_wallet_nfts": {
+    "description": "Retrieves NFTs owned by a wallet",
+    "use_case": "Track NFT holdings and monitor NFT portfolio",
+    "inputs": {
+      "wallet": {
+        "type": "<class 'str'>",
+        "description": "Wallet address",
+        "required": true
+      },
+      "blockchains": {
+        "type": "str",
+        "description": "Comma-separated blockchain names",
+        "required": false
+      },
+      "page": {
+        "type": "<class 'str'>",
+        "description": "Parameter page",
+        "required": false,
+        "default": "1"
+      },
+      "offset": {
+        "type": "<class 'str'>",
+        "description": "Parameter offset",
+        "required": false,
+        "default": "0"
+      },
+      "limit": {
+        "type": "<class 'str'>",
+        "description": "Parameter limit",
+        "required": false,
+        "default": "100"
+      },
+      "pagination": {
+        "type": "<class 'str'>",
+        "description": "Parameter pagination",
+        "required": false,
+        "default": "false"
+      }
     },
+    "outputs": {
+      "data": {
+        "type": "array",
+        "description": "List of owned NFTs"
+      }
+    }
+  },
+  "get_blockchains": {
+    "description": "Retrieves information about all supported blockchains",
+    "use_case": "Get comprehensive details about blockchain networks including RPCs, contracts, and configuration",
+    "inputs": {},
+    "outputs": {
+      "data": {
+        "type": "array",
+        "description": "List of blockchain data",
+        "items": {
+          "name": {
+            "type": "string",
+            "description": "Blockchain name"
+          },
+          "rpcs": {
+            "type": "array",
+            "description": "List of RPC endpoints"
+          },
+          "chainId": {
+            "type": "string",
+            "description": "Chain identifier"
+          },
+          "explorer": {
+            "type": "string",
+            "description": "Block explorer URL"
+          }
+        }
+      }
+    }
+  },
+  "get_feed_create": {
+    "description": "Creates a new data feed",
+    "use_case": "Set up custom data feeds for asset tracking",
+    "inputs": {
+      "quote_id": {
+        "type": "int",
+        "description": "Quote asset identifier",
+        "required": false
+      },
+      "asset_id": {
+        "type": "int",
+        "description": "Asset identifier",
+        "required": false
+      }
+    },
+    "outputs": {
+      "success": {
+        "type": "boolean",
+        "description": "Feed creation status"
+      }
+    }
+  },
+  "get_market_history": {
+    "description": "Retrieves historical market data for an asset",
+    "use_case": "Analyze price history and market trends",
+    "inputs": {
+      "asset": {
+        "type": "str",
+        "description": "Asset name",
+        "required": false
+      },
+      "symbol": {
+        "type": "str",
+        "description": "Asset symbol",
+        "required": false
+      },
+      "blockchain": {
+        "type": "str",
+        "description": "Parameter blockchain",
+        "required": false
+      },
+      "period": {
+        "type": "str",
+        "description": "Time period",
+        "required": false
+      },
+      "id": {
+        "type": "int",
+        "description": "Parameter id",
+        "required": false
+      },
+      "from_timestamp": {
+        "type": "int",
+        "description": "Parameter from_timestamp",
+        "required": false,
+        "default": 0
+      },
+      "to_timestamp": {
+        "type": "int",
+        "description": "Parameter to_timestamp",
+        "required": false
+      }
+    },
+    "outputs": {
+      "data": {
+        "type": "object",
+        "properties": {
+          "price_history": {
+            "type": "array",
+            "description": "Historical price points"
+          }
+        }
+      }
+    }
+  },
+  "get_market_token_holders": {
+    "description": "Retrieves information about token holders",
+    "use_case": "Analyze token distribution and holder statistics",
+    "inputs": {
+      "blockchain": {
+        "type": "str",
+        "description": "Blockchain name",
+        "required": false
+      },
+      "asset": {
+        "type": "str",
+        "description": "Asset name",
+        "required": false
+      },
+      "symbol": {
+        "type": "str",
+        "description": "Asset symbol",
+        "required": false
+      },
+      "limit": {
+        "type": "<class 'int'>",
+        "description": "Number of holders to return",
+        "required": false,
+        "default": 20
+      },
+      "offset": {
+        "type": "<class 'int'>",
+        "description": "Parameter offset",
+        "required": false,
+        "default": 0
+      }
+    },
+    "outputs": {
+      "data": {
+        "type": "array",
+        "description": "List of token holders"
+      },
+      "total_count": {
+        "type": "integer",
+        "description": "Total number of holders"
+      }
+    }
+  },
+  "get_market_total": {
+    "description": "Retrieves total market statistics",
+    "use_case": "Monitor overall market metrics and trends",
+    "inputs": {},
+    "outputs": {
+      "market_cap_history": {
+        "type": "array",
+        "description": "Historical market cap data"
+      },
+      "market_cap_change_24h": {
+        "type": "string",
+        "description": "24-hour market cap change"
+      },
+      "btc_dominance_history": {
+        "type": "array",
+        "description": "Bitcoin dominance history"
+      }
+    }
+  },
     "get_metadata": {
         "description": "Retrieves detailed metadata for an asset",
         "use_case": "Get comprehensive asset information including social metrics and project details",
@@ -975,258 +2321,621 @@
             "data": {
                 "type": "object",
                 "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "Asset name"
+                    "id": {
+                        "type": "number",
+                        "nullable": true
                     },
-                    "description": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "symbol": {
+                        "type": "string"
+                    },
+                    "contracts": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "blockchains": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "decimals": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "twitter": {
                         "type": "string",
-                        "description": "Project description"
+                        "nullable": true
                     },
                     "website": {
                         "type": "string",
-                        "description": "Project website"
+                        "nullable": true
+                    },
+                    "logo": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "price": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "market_cap": {
+                        "type": "number"
+                    },
+                    "liquidity": {
+                        "type": "number"
+                    },
+                    "volume": {
+                        "type": "number"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "kyc": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "audit": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "total_supply_contracts": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "circulating_supply_addresses": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "total_supply": {
+                        "type": "number"
+                    },
+                    "circulating_supply": {
+                        "type": "number"
+                    },
+                    "discord": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "max_supply": {
+                        "type": "number",
+                        "nullable": true
+                    },
+                    "chat": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "investors": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "lead": {
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "image": {
+                                    "type": "string"
+                                },
+                                "country_name": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "lead",
+                                "name",
+                                "type",
+                                "image",
+                                "country_name",
+                                "description"
+                            ]
+                        }
+                    },
+                    "distribution": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "percentage": {
+                                    "type": "number"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "percentage",
+                                "name"
+                            ]
+                        }
+                    },
+                    "release_schedule": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "allocation_details": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "number"
+                                    }
+                                },
+                                "tokens_to_unlock": {
+                                    "type": "number"
+                                },
+                                "unlock_date": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "allocation_details",
+                                "tokens_to_unlock",
+                                "unlock_date"
+                            ]
+                        }
+                    },
+                    "cexs": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "logo": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "id": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "logo",
+                                "name",
+                                "id"
+                            ]
+                        }
+                    },
+                    "listed_at": {
+                        "type": "string",
+                        "nullable": true
                     }
-                }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "symbol",
+                    "contracts",
+                    "blockchains",
+                    "decimals",
+                    "twitter",
+                    "website",
+                    "logo",
+                    "price",
+                    "market_cap",
+                    "liquidity",
+                    "volume",
+                    "description",
+                    "kyc",
+                    "audit",
+                    "total_supply_contracts",
+                    "circulating_supply_addresses",
+                    "total_supply",
+                    "circulating_supply",
+                    "discord",
+                    "max_supply",
+                    "chat",
+                    "tags",
+                    "investors",
+                    "distribution",
+                    "release_schedule",
+                    "cexs",
+                    "listed_at"
+                ]
             }
         }
     },
-    "get_metadata_news": {
-        "description": "Retrieves news articles for specified assets",
-        "use_case": "Monitor news and updates for crypto assets",
-        "inputs": {
-            "symbols": {
-                "type": "<class 'str'>",
-                "description": "Comma-separated asset symbols",
-                "required": true
+  "get_metadata_news": {
+    "description": "Retrieves news articles for specified assets",
+    "use_case": "Monitor news and updates for crypto assets",
+    "inputs": {
+      "symbols": {
+        "type": "<class 'str'>",
+        "description": "Comma-separated asset symbols",
+        "required": true
+      }
+    },
+    "outputs": {
+      "data": {
+        "type": "array",
+        "description": "List of news articles",
+        "items": {
+          "news_url": {
+            "type": "string",
+            "description": "Article URL"
+          },
+          "title": {
+            "type": "string",
+            "description": "Article title"
+          },
+          "sentiment": {
+            "type": "string",
+            "description": "Article sentiment"
+          }
+        }
+      }
+    }
+  },
+  "get_metadata_trendings": {
+    "description": "Retrieves trending assets metadata",
+    "use_case": "Monitor popular and trending crypto assets",
+    "inputs": {
+      "platform": {
+        "type": "str",
+        "description": "Filter by platform",
+        "required": false
+      },
+      "blockchain": {
+        "type": "str",
+        "description": "Filter by blockchain",
+        "required": false
+      }
+    },
+    "outputs": {
+      "data": {
+        "type": "array",
+        "description": "List of trending assets"
+      }
+    }
+  },
+  "get_multi_metadata": {
+    "description": "Retrieves metadata for multiple assets",
+    "use_case": "Batch fetch detailed information for multiple assets",
+    "inputs": {
+      "ids": {
+        "type": "str",
+        "description": "Comma-separated asset IDs",
+        "required": false
+      },
+      "assets": {
+        "type": "str",
+        "description": "Parameter assets",
+        "required": false
+      },
+      "blockchains": {
+        "type": "str",
+        "description": "Parameter blockchains",
+        "required": false
+      },
+      "symbols": {
+        "type": "str",
+        "description": "Comma-separated symbols",
+        "required": false
+      }
+    },
+    "outputs": {
+      "data": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "nullable": true
+            },
+            "name": {
+              "type": "string"
+            },
+            "symbol": {
+              "type": "string"
+            },
+            "contracts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "blockchains": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "decimals": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "twitter": {
+              "type": "string",
+              "nullable": true
+            },
+            "website": {
+              "type": "string",
+              "nullable": true
+            },
+            "logo": {
+              "type": "string",
+              "nullable": true
+            },
+            "price": {
+              "type": "number",
+              "nullable": true
+            },
+            "market_cap": {
+              "type": "number"
+            },
+            "liquidity": {
+              "type": "number"
+            },
+            "volume": {
+              "type": "number"
+            },
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "kyc": {
+              "type": "string",
+              "nullable": true
+            },
+            "audit": {
+              "type": "string",
+              "nullable": true
+            },
+            "total_supply": {
+              "type": "number"
+            },
+            "circulating_supply": {
+              "type": "number"
+            },
+            "discord": {
+              "type": "string",
+              "nullable": true
+            },
+            "max_supply": {
+              "type": "number",
+              "nullable": true
+            },
+            "chat": {
+              "type": "string",
+              "nullable": true
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "listed_at": {
+              "type": "string",
+              "nullable": true
+            },
+            "social_metrics": {
+              "type": "object",
+              "properties": {
+                "twitter_followers": {
+                  "type": "number"
+                },
+                "telegram_members": {
+                  "type": "number"
+                },
+                "discord_members": {
+                  "type": "number"
+                }
+              }
+            },
+            "market_metrics": {
+              "type": "object",
+              "properties": {
+                "price_change_24h": {
+                  "type": "number"
+                },
+                "volume_change_24h": {
+                  "type": "number"
+                },
+                "liquidity_change_24h": {
+                  "type": "number"
+                }
+              }
             }
+          },
+          "required": [
+            "name",
+            "symbol",
+            "contracts",
+            "blockchains",
+            "decimals",
+            "market_cap",
+            "liquidity",
+            "volume",
+            "total_supply",
+            "circulating_supply"
+          ]
         },
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "List of news articles",
-                "items": {
-                    "news_url": {
-                        "type": "string",
-                        "description": "Article URL"
-                    },
-                    "title": {
-                        "type": "string",
-                        "description": "Article title"
-                    },
-                    "sentiment": {
-                        "type": "string",
-                        "description": "Article sentiment"
-                    }
-                }
-            }
-        }
+        "description": "List of metadata for multiple assets"
+      }
+    }
+  },
+  "get_wallet_portfolio": {
+    "description": "Retrieves complete portfolio data for wallets",
+    "use_case": "Track crypto portfolio and analyze holdings across chains",
+    "inputs": {
+      "wallet": {
+        "type": "str",
+        "description": "Single wallet address",
+        "required": false
+      },
+      "wallets": {
+        "type": "Union[str, List[str, NoneType",
+        "description": "Multiple wallet addresses",
+        "required": false
+      },
+      "portfolio": {
+        "type": "str",
+        "description": "Parameter portfolio",
+        "required": false
+      },
+      "blockchains": {
+        "type": "Union[str, List[str, NoneType",
+        "description": "Filter by blockchains",
+        "required": false
+      },
+      "asset": {
+        "type": "str",
+        "description": "Parameter asset",
+        "required": false
+      },
+      "pnl": {
+        "type": "<class 'bool'>",
+        "description": "Parameter pnl",
+        "required": false,
+        "default": false
+      },
+      "cache": {
+        "type": "<class 'bool'>",
+        "description": "Parameter cache",
+        "required": false,
+        "default": false
+      },
+      "stale": {
+        "type": "int",
+        "description": "Parameter stale",
+        "required": false
+      },
+      "recheck_contract": {
+        "type": "<class 'bool'>",
+        "description": "Parameter recheck_contract",
+        "required": false,
+        "default": false
+      },
+      "from_timestamp": {
+        "type": "str",
+        "description": "Parameter from_timestamp",
+        "required": false
+      },
+      "to_timestamp": {
+        "type": "str",
+        "description": "Parameter to_timestamp",
+        "required": false
+      },
+      "portfolio_settings": {
+        "type": "str",
+        "description": "Parameter portfolio_settings",
+        "required": false
+      },
+      "unlisted_assets": {
+        "type": "<class 'bool'>",
+        "description": "Parameter unlisted_assets",
+        "required": false,
+        "default": false
+      },
+      "period": {
+        "type": "str",
+        "description": "Parameter period",
+        "required": false
+      },
+      "accuracy": {
+        "type": "str",
+        "description": "Parameter accuracy",
+        "required": false
+      },
+      "testnet": {
+        "type": "<class 'bool'>",
+        "description": "Parameter testnet",
+        "required": false,
+        "default": false
+      }
     },
-    "get_metadata_trendings": {
-        "description": "Retrieves trending assets metadata",
-        "use_case": "Monitor popular and trending crypto assets",
-        "inputs": {
-            "platform": {
-                "type": "str",
-                "description": "Filter by platform",
-                "required": false
+    "outputs": {
+      "data": {
+        "type": "object",
+        "properties": {
+          "total_wallet_balance": {
+            "type": "number",
+            "description": "Total portfolio value"
+          },
+          "assets": {
+            "type": "array",
+            "description": "List of held assets"
+          }
+        }
+      }
+    }
+  },
+  "search": {
+    "description": "Search for assets, tokens, and trading pairs",
+    "use_case": "Find specific assets or trading pairs using various search criteria",
+    "inputs": {
+      "input": {
+        "type": "<class 'str'>",
+        "description": "Search query string",
+        "required": true
+      },
+      "filters": {
+        "type": "str",
+        "description": "Additional filter criteria",
+        "required": false
+      }
+    },
+    "outputs": {
+      "data": {
+        "type": "array",
+        "description": "Search results",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number",
+              "description": "Asset ID"
+            },
+            "name": {
+              "type": "string",
+              "description": "Asset name"
+            },
+            "symbol": {
+              "type": "string",
+              "description": "Trading symbol"
+            },
+            "type": {
+              "type": "string",
+              "description": "Result type (asset/pair)"
             },
             "blockchain": {
-                "type": "str",
-                "description": "Filter by blockchain",
-                "required": false
+              "type": "string",
+              "description": "Blockchain name"
             }
-        },
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "List of trending assets"
-            }
+          }
         }
-    },
-    "get_multi_metadata": {
-        "description": "Retrieves metadata for multiple assets",
-        "use_case": "Batch fetch detailed information for multiple assets",
-        "inputs": {
-            "ids": {
-                "type": "str",
-                "description": "Comma-separated asset IDs",
-                "required": false
-            },
-            "assets": {
-                "type": "str",
-                "description": "Parameter assets",
-                "required": false
-            },
-            "blockchains": {
-                "type": "str",
-                "description": "Parameter blockchains",
-                "required": false
-            },
-            "symbols": {
-                "type": "str",
-                "description": "Comma-separated symbols",
-                "required": false
-            }
-        },
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "Metadata for multiple assets"
-            }
-        }
-    },
-    "get_wallet_portfolio": {
-        "description": "Retrieves complete portfolio data for wallets",
-        "use_case": "Track crypto portfolio and analyze holdings across chains",
-        "inputs": {
-            "wallet": {
-                "type": "str",
-                "description": "Single wallet address",
-                "required": false
-            },
-            "wallets": {
-                "type": "Union[str, List[str, NoneType",
-                "description": "Multiple wallet addresses",
-                "required": false
-            },
-            "portfolio": {
-                "type": "str",
-                "description": "Parameter portfolio",
-                "required": false
-            },
-            "blockchains": {
-                "type": "Union[str, List[str, NoneType",
-                "description": "Filter by blockchains",
-                "required": false
-            },
-            "asset": {
-                "type": "str",
-                "description": "Parameter asset",
-                "required": false
-            },
-            "pnl": {
-                "type": "<class 'bool'>",
-                "description": "Parameter pnl",
-                "required": false,
-                "default": false
-            },
-            "cache": {
-                "type": "<class 'bool'>",
-                "description": "Parameter cache",
-                "required": false,
-                "default": false
-            },
-            "stale": {
-                "type": "int",
-                "description": "Parameter stale",
-                "required": false
-            },
-            "recheck_contract": {
-                "type": "<class 'bool'>",
-                "description": "Parameter recheck_contract",
-                "required": false,
-                "default": false
-            },
-            "from_timestamp": {
-                "type": "str",
-                "description": "Parameter from_timestamp",
-                "required": false
-            },
-            "to_timestamp": {
-                "type": "str",
-                "description": "Parameter to_timestamp",
-                "required": false
-            },
-            "portfolio_settings": {
-                "type": "str",
-                "description": "Parameter portfolio_settings",
-                "required": false
-            },
-            "unlisted_assets": {
-                "type": "<class 'bool'>",
-                "description": "Parameter unlisted_assets",
-                "required": false,
-                "default": false
-            },
-            "period": {
-                "type": "str",
-                "description": "Parameter period",
-                "required": false
-            },
-            "accuracy": {
-                "type": "str",
-                "description": "Parameter accuracy",
-                "required": false
-            },
-            "testnet": {
-                "type": "<class 'bool'>",
-                "description": "Parameter testnet",
-                "required": false,
-                "default": false
-            }
-        },
-        "outputs": {
-            "data": {
-                "type": "object",
-                "properties": {
-                    "total_wallet_balance": {
-                        "type": "number",
-                        "description": "Total portfolio value"
-                    },
-                    "assets": {
-                        "type": "array",
-                        "description": "List of held assets"
-                    }
-                }
-            }
-        }
-    },
-    "search": {
-        "description": "Search for assets, tokens, and trading pairs",
-        "use_case": "Find specific assets or trading pairs using various search criteria",
-        "inputs": {
-            "input": {
-                "type": "<class 'str'>",
-                "description": "Search query string",
-                "required": true
-            },
-            "filters": {
-                "type": "str",
-                "description": "Additional filter criteria",
-                "required": false
-            }
-        },
-        "outputs": {
-            "data": {
-                "type": "array",
-                "description": "Search results",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "id": {
-                            "type": "number",
-                            "description": "Asset ID"
-                        },
-                        "name": {
-                            "type": "string",
-                            "description": "Asset name"
-                        },
-                        "symbol": {
-                            "type": "string",
-                            "description": "Trading symbol"
-                        },
-                        "type": {
-                            "type": "string",
-                            "description": "Result type (asset/pair)"
-                        },
-                        "blockchain": {
-                            "type": "string",
-                            "description": "Blockchain name"
-                        }
-                    }
-                }
-            }
-        }
+      }
     }
+  }
 }

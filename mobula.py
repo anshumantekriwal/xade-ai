@@ -54,23 +54,21 @@ class Mobula:
         id: Optional[int] = None
     ) -> Dict[str, Any]:
         """
-        Get market data for a specific asset.
+        Fetches comprehensive market data for a specific cryptocurrency or token. Used to get current market metrics, price data, and trading information.
 
         Args:
-            asset (str, optional): Asset name
-            symbol (str, optional): Asset symbol
-            blockchain (str, optional): Blockchain name
-            id (int, optional): Asset ID
+            asset (str, optional): Asset name (e.g., 'bitcoin')
+            symbol (str, optional): Trading symbol (e.g., 'BTC')
+            blockchain (str, optional): Blockchain name (e.g., 'ethereum')
+            id (int, optional): Unique asset identifier
 
         Returns:
-            dict: Market data including:
-                - id (int): Asset ID
-                - name (str): Asset name
-                - symbol (str): Asset symbol
-                - price (float): Current price
-                - market_cap (float): Market capitalization
-                - liquidity (float): Current liquidity
-                And other fields as specified in the API schema
+            dict: Market data containing:
+                - data (object):
+                    - price (float): Current price in USD
+                    - market_cap (float): Market capitalization in USD
+                    - volume (float): 24-hour trading volume
+                    And other market metrics as defined in the API schema
 
         Raises:
             MobulaAPIError: If the API request fails
@@ -116,20 +114,39 @@ class Mobula:
         blockchains: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Get market pairs data.
+        Retrieves trading pair information including liquidity, volume, and price data.
 
         Args:
-            limit (int, optional): Number of results to return (default: 25)
-            offset (int, optional): Offset for pagination (default: 0)
-            id (int, optional): Asset ID
-            asset (str, optional): Asset name
-            symbol (str, optional): Asset symbol
-            blockchain (str, optional): Blockchain name
-            tokens (str, optional): Comma-separated list of token addresses
-            blockchains (str, optional): Comma-separated list of blockchains
+            limit (int, optional): Number of pairs to return (default: 25)
+            offset (int, optional): Number of pairs to skip (default: 0)
+            id (int, optional): Asset ID filter
+            asset (str, optional): Filter by asset name
+            symbol (str, optional): Asset symbol filter
+            blockchain (str, optional): Blockchain filter
+            tokens (str, optional): Filter by token addresses
+            blockchains (str, optional): Multiple blockchain filters
 
         Returns:
-            dict: Market pairs data including list of pairs with details
+            dict: Market pairs data containing:
+                - pairs (list): Array of trading pairs, each containing:
+                    - token0/token1 (object): Details of both tokens including:
+                        - address (str): Contract address
+                        - price (float): Token price
+                        - priceToken (float): Price in token terms
+                        - approximateReserveUSD (float): USD reserve value
+                        - symbol (str): Token symbol
+                        - name (str): Token name
+                        - decimals (int): Token decimals
+                        - logo (str, nullable): Token logo URL
+                    - volume24h (float): 24-hour trading volume
+                    - liquidity (float): Pair liquidity
+                    - blockchain (str): Blockchain name
+                    - address (str): Pair contract address
+                    - createdAt (str): Pair creation date
+                    - exchange (object): Exchange details
+                    - factory (str, nullable): Factory contract
+                    - price (float): Trading price
+                    And other pair-specific metrics
 
         Raises:
             MobulaAPIError: If the API request fails
@@ -148,22 +165,35 @@ class Mobula:
         to_timestamp: Optional[int] = None
     ) -> Dict[str, Any]:
         """
-        Get market history data.
+        Retrieves historical market data for an asset over a specified time period.
 
         Args:
-            asset (str, optional): Asset name
-            symbol (str, optional): Asset symbol
+            asset (str, optional): Asset name (e.g., 'bitcoin')
+            symbol (str, optional): Trading symbol (e.g., 'BTC')
             blockchain (str, optional): Blockchain name
-            period (str, optional): Time period for data
+            period (str, optional): Time period granularity
+                                  Values: '1m', '5m', '15m', '30m', '1h', '2h', '4h', '1d', '1w'
             id (int, optional): Asset ID
-            from_timestamp (int, optional): Start timestamp (default: 0)
-            to_timestamp (int, optional): End timestamp (default: current time)
+            from_timestamp (int, optional): Start timestamp in milliseconds (default: 0)
+            to_timestamp (int, optional): End timestamp in milliseconds (default: current time)
 
         Returns:
-            dict: Market history data including price history and metadata
+            dict: Historical market data containing:
+                - times (list): Timestamps for each data point
+                - prices (list): Price values in USD
+                - volumes (list): Trading volumes
+                - liquidities (list): Liquidity values
+                - market_caps (list): Market capitalizations
+                - metadata (object): Additional data including:
+                    - asset_id (int): Asset identifier
+                    - period (str): Time period used
+                    - data_points (int): Number of data points
+                    - start_time (int): First data point timestamp
+                    - end_time (int): Last data point timestamp
 
         Raises:
             MobulaAPIError: If the API request fails
+            ValueError: If no identifier is provided
         """
         params = {
             k: v for k, v in {
@@ -354,7 +384,7 @@ class Mobula:
         blockchain: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Get metadata for a specific asset.
+        Retrieves detailed metadata for an asset including social metrics and project details.
 
         Args:
             asset (str, optional): Asset name
@@ -363,13 +393,33 @@ class Mobula:
             blockchain (str, optional): Blockchain name
 
         Returns:
-            dict: Asset metadata including:
-                - Basic information (name, symbol, etc.)
-                - Social links (website, twitter, etc.)
-                - Market data
-                - Distribution info
-                - Investors
-                And other metadata fields
+            dict: Comprehensive asset metadata including:
+                - id (int, nullable): Asset ID
+                - name (str): Asset name
+                - symbol (str): Trading symbol
+                - contracts (list): Contract addresses
+                - blockchains (list): Associated blockchains
+                - decimals (list): Decimal places for each contract
+                - twitter (str, nullable): Twitter handle
+                - website (str, nullable): Project website
+                - logo (str, nullable): Logo URL
+                - price (float, nullable): Current price
+                - market_cap (float): Market capitalization
+                - liquidity (float): Current liquidity
+                - volume (float): Trading volume
+                - description (str, nullable): Project description
+                - kyc (str, nullable): KYC verification details
+                - audit (str, nullable): Audit information
+                - total_supply (float): Total token supply
+                - circulating_supply (float): Circulating supply
+                - max_supply (float, nullable): Maximum supply
+                - discord (str, nullable): Discord link
+                - tags (list): Project tags/categories
+                - investors (list): List of project investors
+                - distribution (list): Token distribution details
+                - release_schedule (list): Token release schedule
+                - cexs (list): Listed centralized exchanges
+                - listed_at (str, nullable): Initial listing date
 
         Raises:
             MobulaAPIError: If the API request fails
@@ -444,20 +494,35 @@ class Mobula:
         should_fetch_price_change: Union[bool, str] = False
     ) -> Dict[str, Any]:
         """
-        Get market data for multiple assets at once.
+        Fetches market data for multiple assets in a single request. Perfect for portfolio tracking and market analysis.
 
         Args:
-            ids (Union[str, List[str]], optional): Asset IDs
-            symbols (Union[str, List[str]], optional): Asset symbols
-            blockchains (Union[str, List[str]], optional): Blockchain names
-            assets (Union[str, List[Dict[str, str]]], optional): Asset details list
-            should_fetch_price_change (Union[bool, str], optional): Fetch price changes (default: False)
+            ids (Union[str, List[str]], optional): Asset IDs to fetch
+            symbols (Union[str, List[str]], optional): Trading symbols (e.g., ['BTC', 'ETH'])
+            blockchains (Union[str, List[str]], optional): Filter by blockchain networks
+            assets (Union[str, List[Dict[str, str]]], optional): Detailed asset specifications
+            should_fetch_price_change (Union[bool, str], optional): Include price change data (default: False)
 
         Returns:
-            dict: Market data for multiple assets including:
-                - data (dict): Market data by asset
-                - dataArray (list): Market data as array
-
+            dict: Comprehensive market data containing:
+                - data (dict): Key-value pairs where each key is an asset identifier and value contains:
+                    - id (int): Asset ID
+                    - name (str): Asset name
+                    - symbol (str): Trading symbol
+                    - decimals (int, nullable): Token decimals
+                    - logo (str): Logo URL
+                    - rank (int, nullable): Market rank
+                    - price (float): Current price
+                    - market_cap (float): Market capitalization
+                    - market_cap_diluted (float): Diluted market cap
+                    - volume (float): Trading volume
+                    - liquidity (float): Current liquidity
+                    - price_change_1h/24h/7d/1m/1y (float): Price changes over time
+                    - total_supply (float): Total token supply
+                    - circulating_supply (float): Circulating supply
+                    - contracts (list): List of blockchain contracts
+                - dataArray (list): Same data in array format
+        
         Raises:
             MobulaAPIError: If the API request fails
         """
@@ -489,21 +554,33 @@ class Mobula:
         tos: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Get historical market data for multiple assets.
+        Retrieves historical market data for multiple assets simultaneously, supporting various time periods and aggregations.
 
         Args:
-            assets (str, optional): Asset identifiers
-            period (str, optional): Time period
-            symbols (str, optional): Asset symbols
-            blockchains (str, optional): Blockchain names
-            ids (str, optional): Asset IDs
-            from_timestamp (str, optional): Start timestamp
-            froms (str, optional): Multiple start timestamps
-            to_timestamp (str, optional): End timestamp
-            tos (str, optional): Multiple end timestamps
+            assets (str, optional): Comma-separated asset names (e.g., 'bitcoin,ethereum')
+            period (str, optional): Time period granularity
+                                  Values: '1m', '5m', '15m', '30m', '1h', '2h', '4h', '1d', '1w'
+            symbols (str, optional): Comma-separated trading symbols (e.g., 'BTC,ETH')
+            blockchains (str, optional): Comma-separated blockchain names
+            ids (str, optional): Comma-separated asset IDs
+            from_timestamp (str, optional): Global start timestamp for all assets
+            froms (str, optional): Comma-separated start timestamps for each asset
+            to_timestamp (str, optional): Global end timestamp for all assets
+            tos (str, optional): Comma-separated end timestamps for each asset
 
         Returns:
-            dict: Historical market data for multiple assets
+            dict: 
+                - data (object): Key-value pairs where each key is an asset identifier and value contains:
+                    - times (list): Array of timestamps
+                    - prices (list): Corresponding price values in USD
+                    - volumes (list): Trading volumes for each time point
+                    - liquidities (list): Liquidity values
+                    - market_caps (list): Market capitalizations
+                - metadata (object): Query details including:
+                    - assets (list): List of asset identifiers
+                    - period (str): Time period used
+                    - start_time (int): Global start timestamp
+                    - end_time (int): Global end timestamp
 
         Raises:
             MobulaAPIError: If the API request fails
@@ -723,21 +800,36 @@ class Mobula:
         offset: int = 0
     ) -> Dict[str, Any]:
         """
-        Get trading pair market data.
+        Retrieves detailed trading information for a specific trading pair including recent trades and liquidity data.
 
         Args:
-            blockchain (str, optional): Blockchain name
-            asset (str, optional): Asset name
-            address (str, optional): Contract address
-            symbol (str, optional): Asset symbol
-            limit (int, optional): Number of trades to return
-            amount (int, optional): Minimum trade amount
-            sort_by (str, optional): Sort field
-            sort_order (str, optional): Sort order ('asc' or 'desc', default: 'desc')
-            offset (int, optional): Pagination offset (default: 0)
+            blockchain (str, optional): Blockchain name (e.g., 'ethereum')
+            asset (str, optional): Asset name to filter trades
+            address (str, optional): Contract address of the trading pair
+            symbol (str, optional): Trading symbol
+            limit (int, optional): Maximum number of trades to return
+            amount (int, optional): Minimum trade amount filter
+            sort_by (str, optional): Field to sort trades by
+            sort_order (str, optional): Sort direction ('asc' or 'desc', default: 'desc')
+            offset (int, optional): Number of trades to skip (default: 0)
 
         Returns:
-            dict: Market trade data for the pair
+            dict: Trading pair data containing:
+                - trades (list): List of recent trades, each containing:
+                    - txHash (str): Transaction hash
+                    - timestamp (int): Trade timestamp
+                    - amount0In (float): Amount of token0 in
+                    - amount1In (float): Amount of token1 in
+                    - amount0Out (float): Amount of token0 out
+                    - amount1Out (float): Amount of token1 out
+                    - price_usd (float): Trade price in USD
+                    - total_usd (float): Total trade value in USD
+                    - side (str): Trade side ('buy' or 'sell')
+                - pair (object): Pair information including:
+                    - token0 (object): Token0 details (address, symbol, decimals)
+                    - token1 (object): Token1 details (address, symbol, decimals)
+                    - address (str): Pair contract address
+                    - blockchain (str): Blockchain name
 
         Raises:
             MobulaAPIError: If the API request fails
@@ -788,7 +880,7 @@ class Mobula:
             "filters": filters
         }
         params = {k: v for k, v in params.items() if v is not None}
-        return self._get("/market/blockchain/pairs", params)
+        return self._get("/market/blockchain/pairs", params)["data"]
 
     def get_blockchain_stats(
         self,
@@ -818,7 +910,7 @@ class Mobula:
             
         params = {"blockchain": blockchain, "factory": factory}
         params = {k: v for k, v in params.items() if v is not None}
-        return self._get("/market/blockchain/stats", params)
+        return self._get("/market/blockchain/stats", params)["data"]
 
     def get_cefi_funding_rate(
         self,
@@ -847,7 +939,7 @@ class Mobula:
             
         params = {"symbol": symbol, "quote": quote}
         params = {k: v for k, v in params.items() if v is not None}
-        return self._get("/market/cefi/funding-rate", params)
+        return self._get("/market/cefi/funding-rate", params)["data"]
 
     def get_market_query(
         self,
@@ -858,21 +950,36 @@ class Mobula:
         blockchains: Optional[str] = None,
         limit: int = 20,
         offset: int = 0
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """
-        Get market data with various filters and sorting options.
+        Performs a market query with various filters and sorting options to search and filter market data with custom criteria.
 
         Args:
             sort_by (str, optional): Field to sort by
-            sort_order (str, optional): Sort direction ('asc' or 'desc', default: 'desc')
+            sort_order (str, optional): Sort direction (default: 'desc')
             filters (str, optional): Filter criteria
             blockchain (str, optional): Blockchain filter
-            blockchains (str, optional): Multiple blockchain filters
+            blockchains (str, optional): Multiple blockchain filters (comma-separated)
             limit (int, optional): Results per page (default: 20)
             offset (int, optional): Pagination offset (default: 0)
 
         Returns:
-            list: Market data matching query criteria
+            dict: 
+                - data (list): Array of market data entries, each containing:
+                    - name (str): Asset name
+                    - logo (str, nullable): Asset logo URL
+                    - symbol (str): Trading symbol
+                    - liquidity (float): Asset liquidity
+                    - market_cap (float): Market capitalization
+                    - volume (float): Trading volume
+                    - off_chain_volume (float): Off-chain trading volume
+                    - price (float): Current price
+                    - price_change_1h (float): 1-hour price change
+                    - price_change_24h (float): 24-hour price change
+                    - price_change_7d (float): 7-day price change
+                    - contracts (list): Contract details for each blockchain
+                    - id (int): Asset ID
+                    - rank (int, nullable): Market rank
 
         Raises:
             MobulaAPIError: If the API request fails
@@ -887,7 +994,7 @@ class Mobula:
             "offset": offset
         }
         params = {k: v for k, v in params.items() if v is not None}
-        return self._get("/market/query", params)
+        return self._get("/market/query", params)["data"]
 
     def get_market_query_token(
         self,
@@ -901,7 +1008,7 @@ class Mobula:
         unlisted_assets: bool = False
     ) -> Dict[str, Any]:
         """
-        Get token market data with filtering and sorting options.
+        Performs a token-specific market query with filtering and sorting options.
 
         Args:
             sort_field (str, optional): Field to sort by
@@ -914,7 +1021,20 @@ class Mobula:
             unlisted_assets (bool, optional): Include unlisted assets (default: False)
 
         Returns:
-            dict: Token market data matching query criteria
+            dict: Token market data containing:
+                - data (list): Array of tokens, each containing:
+                    - name (str): Token name
+                    - logo (str, nullable): Token logo URL
+                    - symbol (str): Trading symbol
+                    - address (str): Contract address
+                    - blockchain (str): Blockchain name
+                    - decimals (int): Token decimals
+                    - volume_24h (float): 24h trading volume
+                    - listed_at (str, nullable): Initial listing date
+                    - circulating_supply (str): Circulating supply
+                    - total_supply (str): Total supply
+                    - coingecko_id (str, nullable): CoinGecko identifier
+                    - pairs (list): Trading pairs information
 
         Raises:
             MobulaAPIError: If the API request fails
@@ -930,29 +1050,43 @@ class Mobula:
             "unlistedAssets": unlisted_assets
         }
         params = {k: v for k, v in params.items() if v is not None}
-        return self._get("/market/query/token", params)
+        return self._get("/market/query/token", params)["data"]
 
     def get_market_token_vs_market(
         self,
         tag: str
     ) -> Dict[str, Any]:
         """
-        Compare token performance against market metrics.
+        Compare token/market segment performance against overall market metrics.
 
         Args:
-            tag (str): Market segment or tag to compare against
+            tag (str): Market segment or category to analyze (e.g., 'defi', 'gaming', etc.)
 
         Returns:
-            dict: Comparative market data
+            dict: Comparative market data including:
+                - market_cap (object): Market capitalization data containing:
+                    - current (float): Current market cap
+                    - change_1h (float): 1-hour market cap change
+                    - change_24h (float): 24-hour market cap change
+                    - change_7d (float): 7-day market cap change
+                    - history (list): Historical market cap data
+                - volume (object): Volume data containing:
+                    - current (float): Current trading volume
+                    - change_24h (float): 24-hour volume change
+                    - history (list): Historical volume data
+                - dominance (object): Market dominance metrics:
+                    - current (float): Current market dominance
+                    - change_24h (float): 24-hour dominance change
+                    - history (list): Historical dominance data
 
         Raises:
             MobulaAPIError: If the API request fails
-            ValueError: If tag is not provided
+            ValueError: If tag parameter is missing
         """
         if not tag:
             raise ValueError("Tag parameter is required")
             
-        return self._get("/market/token-vs-market", {"tag": tag})
+        return self._get("/market/token-vs-market", {"tag": tag})["data"]
 
     def get_market_sparkline(
         self,
@@ -964,21 +1098,27 @@ class Mobula:
         png: str = "false"
     ) -> Dict[str, str]:
         """
-        Get market sparkline data.
+        Retrieves sparkline chart data for visualizing price trends. Can return either raw data points or a PNG image URL.
 
         Args:
-            asset (str, optional): Asset name
-            blockchain (str, optional): Blockchain name
-            symbol (str, optional): Asset symbol
+            asset (str, optional): Asset name (e.g., 'bitcoin')
+            blockchain (str, optional): Blockchain name (e.g., 'ethereum')
+            symbol (str, optional): Trading symbol (e.g., 'BTC')
             id (str, optional): Asset ID
-            time_frame (str, optional): Time frame (default: "24h")
-            png (str, optional): Return PNG format (default: "false")
+            time_frame (str, optional): Time period for the sparkline (default: '24h')
+                                     Values: '1h', '24h', '7d', '30d', '3m', '1y', 'all'
+            png (str, optional): Return PNG image URL instead of data points (default: 'false')
 
         Returns:
-            dict: Sparkline data URL
+            dict: Sparkline data containing:
+                - data (list): List of price data points if png=false
+                - url (str): PNG image URL if png=true
+                - timeFrame (str): Time frame used for the data
+                - success (bool): Request success status
 
         Raises:
             MobulaAPIError: If the API request fails
+            ValueError: If no identifier is provided
         """
         params = {
             "asset": asset,
@@ -989,4 +1129,4 @@ class Mobula:
             "png": png
         }
         params = {k: v for k, v in params.items() if v is not None}
-        return self._get("/market/sparkline", params)
+        return self._get("/market/sparkline", params)["data"]
