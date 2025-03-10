@@ -1,0 +1,468 @@
+{
+    "LunarCrush": {
+        "get_coins_list": {
+            "description": "Get a list of all tracked coins with their market data",
+            "use_case": "Used to retrieve comprehensive market data for all tracked cryptocurrencies",
+            "inputs": {},
+            "outputs": {
+                "data": {
+                    "type": "array",
+                    "description": "List of coins with market data",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "description": "LunarCrush internal ID for the asset"
+                            },
+                            "symbol": {
+                                "type": "string",
+                                "description": "The symbol for the asset"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "The full name of the asset"
+                            },
+                            "price": {
+                                "type": "number",
+                                "description": "Current price in USD"
+                            },
+                            "price_btc": {
+                                "type": "number",
+                                "description": "Current price in BTC"
+                            },
+                            "volume_24h": {
+                                "type": "number",
+                                "description": "Volume in USD for 24 hours"
+                            },
+                            "volatility": {
+                                "type": "number",
+                                "description": "Volatility calculated as standard deviation of price"
+                            },
+                            "circulating_supply": {
+                                "type": "number",
+                                "description": "Total number of coins actively available for trade"
+                            },
+                            "max_supply": {
+                                "type": ["number", "null"],
+                                "description": "Maximum supply of the asset if available"
+                            },
+                            "percent_change_1h": {
+                                "type": "number",
+                                "description": "Percent change in price since 1 hour ago"
+                            },
+                            "percent_change_24h": {
+                                "type": "number",
+                                "description": "Percent change in price since 24 hours ago"
+                            },
+                            "percent_change_7d": {
+                                "type": "number",
+                                "description": "Percent change in price since 7 days ago"
+                            },
+                            "market_cap": {
+                                "type": "number",
+                                "description": "Total dollar market value of circulating supply"
+                            },
+                            "market_cap_rank": {
+                                "type": "number",
+                                "description": "Rank by market cap with filtering for outliers"
+                            },
+                            "interactions_24h": {
+                                "type": "number",
+                                "description": "Number of interactions in last 24 hours"
+                            },
+                            "social_volume_24h": {
+                                "type": "number",
+                                "description": "Total number of posts with interactions in last 24 hours"
+                            },
+                            "social_dominance": {
+                                "type": "number",
+                                "description": "Percent of total social volume this topic represents"
+                            },
+                            "market_dominance": {
+                                "type": "number",
+                                "description": "Percent of total market cap this asset represents"
+                            },
+                            "galaxy_score": {
+                                "type": "number",
+                                "description": "LunarCrush Galaxy Score™ based on technical and social indicators"
+                            },
+                            "alt_rank": {
+                                "type": "number",
+                                "description": "Score based on asset performance relative to others"
+                            },
+                            "sentiment": {
+                                "type": "number",
+                                "description": "Percentage of positive posts weighted by interactions"
+                            },
+                            "categories": {
+                                "type": "string",
+                                "description": "Comma delimited categories/sectors this asset belongs to"
+                            },
+                            "blockchains": {
+                                "type": "array",
+                                "description": "List of blockchains the asset exists on",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": ["string", "null"],
+                                            "description": "Type of blockchain implementation"
+                                        },
+                                        "network": {
+                                            "type": "string",
+                                            "description": "Name of the blockchain network"
+                                        },
+                                        "address": {
+                                            "type": ["string", "null"],
+                                            "description": "Contract address (null/0 for layer 1)"
+                                        },
+                                        "decimals": {
+                                            "type": ["number", "null"],
+                                            "description": "Token decimals"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get_coin_data": {
+            "description": "Get market data for a specific coin",
+            "use_case": "Used to retrieve detailed market data for a specific cryptocurrency or token using its ID or symbol",
+            "inputs": {
+                "coin": {
+                    "type": "string",
+                    "description": "Numeric ID or symbol of the coin",
+                    "required": true
+                }
+            },
+            "outputs": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "description": "Unique identifier of the coin"
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "Name of the coin"
+                        },
+                        "symbol": {
+                            "type": "string",
+                            "description": "Trading symbol"
+                        },
+                        "price": {
+                            "type": "number",
+                            "description": "Current price in USD"
+                        },
+                        "price_btc": {
+                            "type": "number",
+                            "description": "Price in BTC"
+                        },
+                        "market_cap": {
+                            "type": "number",
+                            "description": "Market capitalization in USD"
+                        },
+                        "volume_24h": {
+                            "type": "number",
+                            "description": "24-hour trading volume"
+                        },
+                        "max_supply": {
+                            "type": ["number", "null"],
+                            "description": "Maximum supply of the coin"
+                        },
+                        "circulating_supply": {
+                            "type": "number",
+                            "description": "Current circulating supply"
+                        },
+                        "galaxy_score": {
+                            "type": "number",
+                            "description": "LunarCrush Galaxy Score™"
+                        },
+                        "alt_rank": {
+                            "type": "number",
+                            "description": "LunarCrush AltRank™"
+                        },
+                        "market_cap_rank": {
+                            "type": "number",
+                            "description": "Rank by market capitalization"
+                        }
+                    }
+                }
+            }
+        },
+        "get_coin_metadata": {
+            "description": "Get meta information for a cryptocurrency project",
+            "use_case": "Used to retrieve detailed project information including social links, descriptions, and blockchain details",
+            "inputs": {
+                "coin": {
+                    "type": "string",
+                    "description": "Numeric ID or symbol of the coin",
+                    "required": true
+                }
+            },
+            "outputs": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "description": "Unique identifier of the coin"
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "Name of the coin"
+                        },
+                        "symbol": {
+                            "type": "string",
+                            "description": "Trading symbol"
+                        },
+                        "market_categories": {
+                            "type": "string",
+                            "description": "Market category classifications"
+                        },
+                        "blockchain": {
+                            "type": "array",
+                            "description": "List of blockchain networks where the asset exists",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": ["string", "null"],
+                                        "description": "Type of blockchain implementation"
+                                    },
+                                    "network": {
+                                        "type": "string",
+                                        "description": "Blockchain network name"
+                                    },
+                                    "address": {
+                                        "type": ["string", "null"],
+                                        "description": "Contract address on the network"
+                                    },
+                                    "decimals": {
+                                        "type": ["number", "null"],
+                                        "description": "Token decimals"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get_nft_data": {
+            "description": "Get market data for an NFT collection",
+            "use_case": "Used to retrieve current market metrics and trading information for a specific NFT collection",
+            "inputs": {
+                "nft": {
+                    "type": "string",
+                    "description": "Numeric ID or slug of the NFT collection",
+                    "required": true
+                }
+            },
+            "outputs": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "description": "Unique identifier of the NFT collection"
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "Name of the NFT collection"
+                        },
+                        "floor_price": {
+                            "type": "number",
+                            "description": "Current floor price in ETH"
+                        },
+                        "market_cap": {
+                            "type": "number",
+                            "description": "Market capitalization"
+                        },
+                        "percent_change_24h": {
+                            "type": "number",
+                            "description": "24-hour price change percentage"
+                        },
+                        "volume_24h": {
+                            "type": "number",
+                            "description": "24-hour trading volume"
+                        }
+                    }
+                }
+            }
+        },
+        "get_topic_news": {
+            "description": "Get the top news posts for a social topic",
+            "use_case": "Used to retrieve top news articles determined by metrics related to social posts that mention the news",
+            "inputs": {
+                "topic": {
+                    "type": "string",
+                    "description": "Topic identifier (can include letters, numbers, spaces, #, and $)",
+                    "required": true
+                }
+            },
+            "outputs": {
+                "data": {
+                    "type": "array",
+                    "description": "List of news articles",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "LunarCrush internal ID for the article"
+                            },
+                            "post_type": {
+                                "type": "string",
+                                "description": "Type of social post"
+                            },
+                            "post_title": {
+                                "type": "string",
+                                "description": "Article title"
+                            },
+                            "post_link": {
+                                "type": "string",
+                                "description": "URL to view the article"
+                            },
+                            "post_sentiment": {
+                                "type": "number",
+                                "description": "Sentiment score (1-5: 1=very negative, 3=neutral, 5=very positive)"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "get_topic_summary": {
+            "description": "Get summary information for a social topic",
+            "use_case": "Used to retrieve aggregated 24-hour social activity metrics and comparisons with previous periods",
+            "inputs": {
+                "topic": {
+                    "type": "string",
+                    "description": "Topic identifier to get summary for",
+                    "required": true
+                }
+            },
+            "outputs": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "topic": {
+                            "type": "string",
+                            "description": "Topic identifier"
+                        },
+                        "title": {
+                            "type": "string",
+                            "description": "Display title for the topic"
+                        },
+                        "topic_rank": {
+                            "type": "number",
+                            "description": "Ranking of the topic"
+                        },
+                        "related_topics": {
+                            "type": "array",
+                            "description": "List of related topic identifiers",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "interactions_24h": {
+                            "type": "number",
+                            "description": "Total interactions in the last 24 hours"
+                        },
+                        "num_contributors": {
+                            "type": "number",
+                            "description": "Number of unique contributors"
+                        },
+                        "num_posts": {
+                            "type": "number",
+                            "description": "Total number of posts"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "CryptoPanic": {
+        "get_posts": {
+            "description": "Get news and media posts from various sources",
+            "use_case": "Used to retrieve and filter crypto-related news and media content",
+            "inputs": {
+                "public": {
+                    "type": "boolean",
+                    "description": "Filter by public posts only",
+                    "required": false,
+                    "default": false
+                },
+                "filter": {
+                    "type": "string",
+                    "description": "Post filter type (rising|hot|bullish|bearish|important|saved|lol)",
+                    "required": false
+                },
+                "currencies": {
+                    "type": "string",
+                    "description": "Comma-separated list of currency codes (max 50, e.g., 'BTC,ETH')",
+                    "required": false
+                },
+                "regions": {
+                    "type": "string",
+                    "description": "Comma-separated list of region codes (en,de,nl,es,fr,it,pt,ru,tr,ar,cn,jp,ko)",
+                    "required": false
+                },
+                "kind": {
+                    "type": "string",
+                    "description": "Content type filter (news|media)",
+                    "required": false
+                }
+            },
+            "outputs": {
+                "count": {
+                    "type": "number",
+                    "description": "Total number of results"
+                },
+                "next": {
+                    "type": "string",
+                    "description": "URL for next page"
+                },
+                "previous": {
+                    "type": "string",
+                    "description": "URL for previous page"
+                },
+                "results": {
+                    "type": "array",
+                    "description": "Array of posts",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "kind": {
+                                "type": "string",
+                                "description": "Post type (news/media)"
+                            },
+                            "title": {
+                                "type": "string",
+                                "description": "Post title"
+                            },
+                            "published_at": {
+                                "type": "string",
+                                "description": "Publication timestamp"
+                            },
+                            "url": {
+                                "type": "string",
+                                "description": "Source URL"
+                            },
+                            "currencies": {
+                                "type": "array",
+                                "description": "Related cryptocurrencies"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
