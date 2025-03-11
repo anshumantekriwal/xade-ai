@@ -59,8 +59,24 @@ class LunarCrush:
                 - symbol (str): Trading symbol
                 - price (float): Current price in USD
                 - price_btc (float): Price in BTC
-                - market_cap (float): Market capitalization in USD
-                And other market metrics
+                - volume_24h (float): Volume in USD for 24 hours
+                - volatility (float): Standard deviation of price
+                - circulating_supply (float): Number of coins actively available
+                - max_supply (float): Maximum supply of the coin
+                - percent_change_1h (float): 1-hour price change percentage
+                - percent_change_24h (float): 24-hour price change percentage
+                - percent_change_7d (float): 7-day price change percentage
+                - market_cap (float): Total market capitalization in USD
+                - market_cap_rank (int): Rank by market cap
+                - interactions_24h (int): Number of social interactions
+                - social_volume_24h (int): Number of posts with interactions
+                - social_dominance (float): Percent of total social volume
+                - market_dominance (float): Percent of total market cap
+                - galaxy_score (int): Technical and social indicator score
+                - alt_rank (int): Performance score relative to other assets
+                - sentiment (float): Percentage of positive weighted posts
+                - categories (str): Asset categories/sectors
+                - blockchains (list): List of blockchain networks and contracts
 
         Raises:
             SocialAPIError: If the API request fails
@@ -80,9 +96,23 @@ class LunarCrush:
                 - name (str): Name of the coin
                 - symbol (str): Trading symbol
                 - market_categories (str): Market category classifications
-                - blockchain (list): List of blockchain networks where the asset exists
+                - blockchain (list): List of blockchain networks including:
+                    - type (str): Type of blockchain implementation
+                    - network (str): Blockchain network name
+                    - address (str): Contract address on the network
+                    - decimals (int): Token decimals
+                - short_summary (str): Brief project description
                 - description (str): Detailed project description
-                - social links and other metadata
+                - github_link (str): GitHub repository URL
+                - website_link (str): Project website URL
+                - whitepaper_link (str): Whitepaper URL
+                - twitter_link (str): Twitter profile URL
+                - reddit_link (str): Reddit community URL
+                - header_image (str): Header image URL
+                - header_text (str): Header text description
+                - videos (str): Related video URLs
+                - coingecko_link (str): CoinGecko profile URL
+                - coinmarketcap_link (str): CoinMarketCap profile URL
 
         Raises:
             SocialAPIError: If the API request fails
@@ -104,6 +134,17 @@ class LunarCrush:
                 - market_cap (float): Market capitalization
                 - percent_change_24h (float): 24-hour price change percentage
                 - volume_24h (float): 24-hour trading volume
+                - total_supply (int): Total number of NFTs in collection
+                - num_owners (int): Number of unique owners
+                - avg_price_24h (float): Average sale price in last 24h
+                - highest_sale (float): Highest sale price ever
+                - market_cap_rank (int): Rank by market cap
+                - volume_rank (int): Rank by trading volume
+                - social_volume_24h (int): Number of social mentions
+                - twitter_followers (int): Number of Twitter followers
+                - discord_members (int): Number of Discord members
+                - website_link (str): Collection website URL
+                - marketplace_links (list): NFT marketplace URLs
 
         Raises:
             SocialAPIError: If the API request fails
@@ -118,13 +159,25 @@ class LunarCrush:
             topic (str): Topic identifier (can include letters, numbers, spaces, #, and $)
 
         Returns:
-            dict: List of news articles including:
-                - id (str): LunarCrush internal ID
+            list: List of news articles including:
+                - id (str): LunarCrush internal ID for the article
                 - post_type (str): Type of social post
                 - post_title (str): Article title
-                - post_link (str): URL to article
+                - post_link (str): URL to view the article
+                - post_image (str): URL to the primary image
+                - post_created (int): Unix timestamp of creation
                 - post_sentiment (float): Sentiment score (1-5)
-                And other article metadata
+                - creator_id (str): Unique identifier for creator
+                - creator_name (str): Screen name of creator
+                - creator_display_name (str): Display name of creator
+                - creator_followers (int): Number of creator followers
+                - creator_avatar (str): URL to creator's avatar
+                - interactions_24h (int): Interactions in last 24 hours
+                - interactions_total (int): Total number of interactions
+                - source_domain (str): Domain of the news source
+                - source_name (str): Name of the news source
+                - topics (list): Related topic identifiers
+                - assets (list): Related asset symbols
 
         Raises:
             SocialAPIError: If the API request fails
@@ -142,10 +195,20 @@ class LunarCrush:
                 - name (str): Full name of the asset
                 - price (float): Current price in USD
                 - price_btc (float): Price in BTC
-                - volume_24h (float): 24-hour volume
+                - volume_24h (float): 24-hour volume in USD
                 - market_cap (float): Market capitalization
                 - galaxy_score (int): LunarCrush Galaxy Score™
-                And other market and social metrics
+                - alt_rank (int): Relative performance score
+                - interactions_24h (int): Social interactions in last 24h
+                - social_volume_24h (int): Total posts with interactions
+                - social_dominance (float): Percentage of total social volume
+                - market_dominance (float): Percentage of total market cap
+                - market_cap_rank (int): Market cap ranking
+                - percent_change_24h (float): 24h price change percentage
+                - volatility (float): Price volatility metric
+                - sentiment (float): Weighted sentiment score
+                - categories (str): Asset categories
+                - blockchains (list): Associated blockchain networks
 
         Raises:
             SocialAPIError: If the API request fails
@@ -162,12 +225,22 @@ class LunarCrush:
         Returns:
             dict: Topic summary including:
                 - topic (str): Topic identifier
-                - title (str): Display title
-                - topic_rank (int): Topic ranking
-                - related_topics (list): Related topic identifiers
-                - interactions_24h (int): Total interactions last 24h
+                - title (str): Display title for the topic
+                - topic_rank (int): Ranking of the topic
+                - related_topics (list): List of related topic identifiers
+                - interactions_24h (int): Total interactions in last 24 hours
                 - num_contributors (int): Number of unique contributors
-                And detailed engagement metrics by content type
+                - num_posts (int): Total number of posts
+                - types_count (dict): Count of posts by content type:
+                    - tweet (int): Number of tweets
+                    - reddit-post (int): Number of Reddit posts
+                    - youtube-video (int): Number of YouTube videos
+                    - tiktok-video (int): Number of TikTok videos
+                    - news (int): Number of news articles
+                - types_interactions (dict): Interactions by content type
+                - types_sentiment (dict): Sentiment scores by content type
+                - types_sentiment_detail (dict): Detailed sentiment breakdown
+                - trend (str): Current trend direction (up/down)
 
         Raises:
             SocialAPIError: If the API request fails
@@ -246,8 +319,18 @@ class CryptoPanic:
                     - published_at (str): Publication timestamp
                     - url (str): Source URL
                     - currencies (list): Related cryptocurrencies
-                    - votes (dict): User voting data
-                    - metadata (dict): Additional post metadata
+                    - votes (dict): User voting data including:
+                        - positive (int): Number of positive votes
+                        - negative (int): Number of negative votes
+                        - important (int): Number of important votes
+                        - liked (bool): Whether authenticated user liked
+                        - disliked (bool): Whether authenticated user disliked
+                    - metadata (dict): Additional metadata including:
+                        - description (str): Full post description
+                        - tags (list): Associated topic tags
+                        - image (str): Featured image URL
+                        - author (str): Original author name
+                        - share_url (str): Social sharing URL
 
         Raises:
             SocialAPIError: If the API request fails
