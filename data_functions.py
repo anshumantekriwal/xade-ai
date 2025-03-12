@@ -6,72 +6,104 @@ import numpy as np
 # ------------------------------------------------------------------------------
 # 1. calculateSMA
 # ------------------------------------------------------------------------------
-def calculateSMA(market_history_output: List[float], period: int) -> float:
+def calculateSMA(raw_market_history_output: Dict[str, Any], period: int) -> float:
     """
     Function Name: calculateSMA
     Description: Computes the Simple Moving Average (SMA) using historical price data.
-                 Data should be extracted from the "price_history" field in the output of Mobula.get_market_history.
+                 The raw API output is expected to have a "data" field containing "price_history",
+                 which is a list of price data. If "price_history" is a list of lists, each sublist is assumed to be 
+                 structured as [timestamp, price] and the price is extracted from index 1.
     Inputs:
-        - market_history_output: List of historical price values.
+        - raw_market_history_output: Raw API output from Mobula.get_market_history.
         - period: Number of most recent data points to average.
     Processing:
+        - Extract "price_history" from the "data" field.
+        - Convert the price history into a flat list of floats by extracting the price from each entry.
         - Extract the last 'period' prices and compute their arithmetic mean.
     Output:
         - A float representing the SMA.
     """
-    if len(market_history_output) < period:
+    price_history = raw_market_history_output.get("data", {}).get("price_history", [])
+    if not price_history:
+        raise ValueError("price_history not found in raw market history output.")
+    # If elements are lists, extract the second element from each sublist (index 1).
+    if isinstance(price_history[0], list):
+        prices = [entry[1] for entry in price_history if entry and len(entry) > 1]
+    else:
+        prices = price_history
+    if len(prices) < period:
         raise ValueError("Not enough data points to compute SMA.")
-    return sum(market_history_output[-period:]) / period
+    return sum(prices[-period:]) / period
 
 # ------------------------------------------------------------------------------
 # 2. calculateEMA
 # ------------------------------------------------------------------------------
-def calculateEMA(market_history_output: List[float], period: int) -> float:
+def calculateEMA(raw_market_history_output: Dict[str, Any], period: int) -> float:
     """
     Function Name: calculateEMA
     Description: Computes the Exponential Moving Average (EMA) where more weight is given to recent prices.
-                 Data should be extracted from the "price_history" field in the output of Mobula.get_market_history.
+                 The raw API output is expected to have a "data" field containing "price_history",
+                 which is a list of price data. If "price_history" is a list of lists, each sublist is assumed to be 
+                 structured as [timestamp, price] and the price is extracted from index 1.
     Inputs:
-        - market_history_output: List of historical price values.
+        - raw_market_history_output: Raw API output from Mobula.get_market_history.
         - period: The EMA period.
     Processing:
+        - Extract "price_history" and convert it to a flat list of floats.
         - Initialize EMA with the SMA of the first 'period' values.
         - Update the EMA iteratively using the smoothing factor k = 2/(period+1).
     Output:
         - A float representing the final EMA.
     """
-    if len(market_history_output) < period:
+    price_history = raw_market_history_output.get("data", {}).get("price_history", [])
+    if not price_history:
+        raise ValueError("price_history not found in raw market history output.")
+    if isinstance(price_history[0], list):
+        prices = [entry[1] for entry in price_history if entry and len(entry) > 1]
+    else:
+        prices = price_history
+    if len(prices) < period:
         raise ValueError("Not enough data points to compute EMA.")
-    ema = sum(market_history_output[:period]) / period
+    ema = sum(prices[:period]) / period
     k = 2 / (period + 1)
-    for price in market_history_output[period:]:
+    for price in prices[period:]:
         ema = price * k + ema * (1 - k)
     return ema
 
 # ------------------------------------------------------------------------------
 # 3. calculateRSI
 # ------------------------------------------------------------------------------
-def calculateRSI(market_history_output: List[float], period: int = 14) -> float:
+def calculateRSI(raw_market_history_output: Dict[str, Any], period: int = 14) -> float:
     """
     Function Name: calculateRSI
     Description: Computes the Relative Strength Index (RSI) to indicate momentum and identify overbought or oversold conditions.
-                 Data should be extracted from the "price_history" field in the output of Mobula.get_market_history.
+                 The raw API output is expected to have a "data" field containing "price_history",
+                 which is a list of price data. If "price_history" is a list of lists, each sublist is assumed to be 
+                 structured as [timestamp, price] and the price is extracted from index 1.
     Inputs:
-        - market_history_output: List of historical price values.
+        - raw_market_history_output: Raw API output from Mobula.get_market_history.
         - period: RSI period (default is 14).
     Processing:
+        - Extract "price_history" and convert it to a flat list of floats.
         - Compute consecutive price changes; separate gains and losses.
         - Calculate the average gain and average loss over the period.
         - Compute RS = (average gain) / (average loss) and then RSI = 100 - (100 / (1 + RS)).
     Output:
         - A float (0 to 100) representing the RSI.
     """
-    if len(market_history_output) <= period:
+    price_history = raw_market_history_output.get("data", {}).get("price_history", [])
+    if not price_history:
+        raise ValueError("price_history not found in raw market history output.")
+    if isinstance(price_history[0], list):
+        prices = [entry[1] for entry in price_history if entry and len(entry) > 1]
+    else:
+        prices = price_history
+    if len(prices) <= period:
         raise ValueError("Not enough data points to compute RSI.")
     gains = []
     losses = []
-    for i in range(1, len(market_history_output)):
-        change = market_history_output[i] - market_history_output[i - 1]
+    for i in range(1, len(prices)):
+        change = prices[i] - prices[i - 1]
         if change >= 0:
             gains.append(change)
             losses.append(0)
@@ -88,45 +120,59 @@ def calculateRSI(market_history_output: List[float], period: int = 14) -> float:
 # ------------------------------------------------------------------------------
 # 4. calculateMACD
 # ------------------------------------------------------------------------------
-def calculateMACD(market_history_output: List[float], fast_period: int, slow_period: int, signal_period: int) -> Dict[str, float]:
+def calculateMACD(raw_market_history_output: Dict[str, Any], fast_period: int, slow_period: int, signal_period: int) -> Dict[str, float]:
     """
     Function Name: calculateMACD
     Description: Calculates the Moving Average Convergence Divergence (MACD) indicator.
-                 Data should be extracted from the "price_history" field in the output of Mobula.get_market_history.
+                 The raw API output is expected to have a "data" field containing "price_history",
+                 which is a list of price data. If "price_history" is a list of lists, each sublist is assumed to be 
+                 structured as [timestamp, price] and the price is extracted from index 1.
     Inputs:
-        - market_history_output: List of historical price values.
+        - raw_market_history_output: Raw API output from Mobula.get_market_history.
         - fast_period: Period for the fast EMA.
         - slow_period: Period for the slow EMA.
         - signal_period: Period for the signal line EMA.
     Processing:
+        - Extract "price_history" and convert it to a flat list of floats.
         - Compute fast and slow EMAs.
         - Derive MACD_line = fast EMA - slow EMA.
         - Compute the signal line as the EMA of the MACD_line over the signal_period.
-        - Calculate the histogram as MACD_line minus signal line.
+        - Calculate the histogram as MACD_line minus the signal line.
     Output:
         - A dictionary with keys "macd_line", "signal_line", and "histogram" representing the respective values.
     """
-    if len(market_history_output) < slow_period:
+    price_history = raw_market_history_output.get("data", {}).get("price_history", [])
+    if not price_history:
+        raise ValueError("price_history not found in raw market history output.")
+    if isinstance(price_history[0], list):
+        prices = [entry[1] for entry in price_history if entry and len(entry) > 1]
+    else:
+        prices = price_history
+    if len(prices) < slow_period:
         raise ValueError("Not enough data points to compute MACD.")
+    
     # Fast EMA
-    fast_ema = sum(market_history_output[:fast_period]) / fast_period
+    fast_ema = sum(prices[:fast_period]) / fast_period
     k_fast = 2 / (fast_period + 1)
     fast_ema_values = [fast_ema]
-    for price in market_history_output[fast_period:]:
+    for price in prices[fast_period:]:
         fast_ema = price * k_fast + fast_ema * (1 - k_fast)
         fast_ema_values.append(fast_ema)
+    
     # Slow EMA
-    slow_ema = sum(market_history_output[:slow_period]) / slow_period
+    slow_ema = sum(prices[:slow_period]) / slow_period
     k_slow = 2 / (slow_period + 1)
     slow_ema_values = [slow_ema]
-    for price in market_history_output[slow_period:]:
+    for price in prices[slow_period:]:
         slow_ema = price * k_slow + slow_ema * (1 - k_slow)
         slow_ema_values.append(slow_ema)
+    
     # Align fast EMA to slow EMA length
     aligned_fast = fast_ema_values[-len(slow_ema_values):]
     macd_line = [f - s for f, s in zip(aligned_fast, slow_ema_values)]
     if len(macd_line) < signal_period:
         raise ValueError("Not enough MACD data to compute signal line.")
+    
     # Signal line calculation
     signal = sum(macd_line[:signal_period]) / signal_period
     k_signal = 2 / (signal_period + 1)
@@ -134,6 +180,7 @@ def calculateMACD(market_history_output: List[float], fast_period: int, slow_per
     for value in macd_line[signal_period:]:
         signal = value * k_signal + signal * (1 - k_signal)
         signal_line_values.append(signal)
+    
     # Align signal line with MACD line length (pad if necessary)
     signal_line = [None] * (len(macd_line) - len(signal_line_values)) + signal_line_values
     histogram = [m - s if s is not None else 0 for m, s in zip(macd_line, signal_line)]
@@ -146,48 +193,67 @@ def calculateMACD(market_history_output: List[float], fast_period: int, slow_per
 # ------------------------------------------------------------------------------
 # 5. calculateVolatility
 # ------------------------------------------------------------------------------
-def calculateVolatility(market_history_output: List[float], time_frame: str = "24h") -> float:
+def calculateVolatility(raw_market_history_output: Dict[str, Any], time_frame: str = "24h") -> float:
     """
     Function Name: calculateVolatility
     Description: Computes market volatility as the standard deviation of percentage returns.
-                 Data should be extracted from the "price_history" field in the output of Mobula.get_market_history.
+                 The raw API output is expected to have a "data" field containing "price_history",
+                 which is a list of price data. If "price_history" is a list of lists, each sublist is assumed to be 
+                 structured as [timestamp, price] and the price is extracted from index 1.
     Inputs:
-        - market_history_output: List of historical price values.
+        - raw_market_history_output: Raw API output from Mobula.get_market_history.
         - time_frame: A string indicating the time frame (e.g., "24h"); used for contextual purposes.
     Processing:
+        - Extract "price_history" and convert it to a flat list of floats.
         - Compute percentage returns between consecutive prices.
         - Calculate the standard deviation of these returns.
     Output:
         - A float representing the volatility.
     """
-    if len(market_history_output) < 2:
+    price_history = raw_market_history_output.get("data", {}).get("price_history", [])
+    if not price_history:
+        raise ValueError("price_history not found in raw market history output.")
+    if isinstance(price_history[0], list):
+        prices = [entry[1] for entry in price_history if entry and len(entry) > 1]
+    else:
+        prices = price_history
+    if len(prices) < 2:
         raise ValueError("Not enough data to compute volatility.")
-    returns = [(market_history_output[i] - market_history_output[i - 1]) / market_history_output[i - 1]
-               for i in range(1, len(market_history_output))]
+    returns = [(prices[i] - prices[i - 1]) / prices[i - 1] for i in range(1, len(prices))]
     return statistics.stdev(returns)
 
 # ------------------------------------------------------------------------------
 # 6. determineTrend
 # ------------------------------------------------------------------------------
-def determineTrend(market_history_output: List[float], short_period: int, long_period: int) -> str:
+def determineTrend(raw_market_history_output: Dict[str, Any], short_period: int, long_period: int) -> str:
     """
     Function Name: determineTrend
     Description: Determines the current trend (up, down, or sideways) by comparing short-term and long-term simple moving averages.
-                 Data should be extracted from the "price_history" field in the output of Mobula.get_market_history.
+                 The raw API output is expected to have a "data" field containing "price_history",
+                 which is a list of price data. If "price_history" is a list of lists, each sublist is assumed to be 
+                 structured as [timestamp, price] and the price is extracted from index 1.
     Inputs:
-        - market_history_output: List of historical price values.
+        - raw_market_history_output: Raw API output from Mobula.get_market_history.
         - short_period: Number of recent data points for the short-term SMA.
         - long_period: Number of recent data points for the long-term SMA.
     Processing:
+        - Extract "price_history" and convert it to a flat list of floats.
         - Compute the short-term SMA and the long-term SMA.
         - Compare the two averages: if short-term SMA > long-term SMA then trend is "up", if less then "down", else "sideways".
     Output:
         - A string indicating the trend ("up", "down", or "sideways").
     """
-    if len(market_history_output) < long_period:
+    price_history = raw_market_history_output.get("data", {}).get("price_history", [])
+    if not price_history:
+        raise ValueError("price_history not found in raw market history output.")
+    if isinstance(price_history[0], list):
+        prices = [entry[1] for entry in price_history if entry and len(entry) > 1]
+    else:
+        prices = price_history
+    if len(prices) < long_period:
         raise ValueError("Not enough data to determine trend.")
-    short_sma = sum(market_history_output[-short_period:]) / short_period
-    long_sma = sum(market_history_output[-long_period:]) / long_period
+    short_sma = sum(prices[-short_period:]) / short_period
+    long_sma = sum(prices[-long_period:]) / long_period
     if short_sma > long_sma:
         return "up"
     elif short_sma < long_sma:
@@ -198,60 +264,63 @@ def determineTrend(market_history_output: List[float], short_period: int, long_p
 # ------------------------------------------------------------------------------
 # 7. price
 # ------------------------------------------------------------------------------
-def price(market_data_output: Dict[str, Any]) -> float:
+def price(raw_market_data_output: Dict[str, Any]) -> float:
     """
     Function Name: price
     Description: Retrieves the current price from market data.
-                 Data should be obtained from Mobula.get_market_data (field "price").
+                 The raw API output is expected to have a "data" field containing a dictionary with a "price" field.
     Inputs:
-        - market_data_output: Dictionary containing market data with a "price" field.
+        - raw_market_data_output: Raw API output from Mobula.get_market_data.
     Processing:
-        - Extract and return the price.
+        - Extract and return the price from the nested "data" field if present; otherwise, use the top-level field.
     Output:
         - A float representing the current price in USD.
     """
-    p = market_data_output.get("price")
+    data = raw_market_data_output.get("data", raw_market_data_output)
+    p = data.get("price")
     if p is None:
-        raise ValueError("Price not found in market_data_output.")
+        raise ValueError("Price not found in market data output.")
     return p
 
 # ------------------------------------------------------------------------------
 # 8. volume
 # ------------------------------------------------------------------------------
-def volume(market_data_output: Dict[str, Any]) -> float:
+def volume(raw_market_data_output: Dict[str, Any]) -> float:
     """
     Function Name: volume
     Description: Retrieves the 24-hour trading volume from market data.
-                 Data should be obtained from Mobula.get_market_data (field "volume").
+                 The raw API output is expected to have a "data" field containing a dictionary with a "volume" field.
     Inputs:
-        - market_data_output: Dictionary containing market data with a "volume" field.
+        - raw_market_data_output: Raw API output from Mobula.get_market_data.
     Processing:
-        - Extract and return the volume.
+        - Extract and return the volume from the nested "data" field if present; otherwise, use the top-level field.
     Output:
         - A float representing the trading volume.
     """
-    vol = market_data_output.get("volume")
+    data = raw_market_data_output.get("data", raw_market_data_output)
+    vol = data.get("volume")
     if vol is None:
-        raise ValueError("Volume not found in market_data_output.")
+        raise ValueError("Volume not found in market data output.")
     return vol
 
 # ------------------------------------------------------------------------------
 # 9. marketCap
 # ------------------------------------------------------------------------------
-def marketCap(market_data_output: Dict[str, Any], circulating_supply_output: float) -> float:
+def marketCap(raw_market_data_output: Dict[str, Any], circulating_supply_output: float) -> float:
     """
     Function Name: marketCap
     Description: Calculates market capitalization using the current price and circulating supply.
-                 Price data is from Mobula.get_market_data and circulating supply is expected from a separate source (e.g., LunarCrush.get_coin_data).
+                 The raw API output is expected to have a "data" field containing a dictionary with a "price" field.
     Inputs:
-        - market_data_output: Dictionary containing "price" (from Mobula.get_market_data).
+        - raw_market_data_output: Raw API output from Mobula.get_market_data.
         - circulating_supply_output: A float representing circulating supply.
     Processing:
-        - Multiply price by circulating supply.
+        - Extract the price and multiply by circulating supply.
     Output:
         - A float representing the market capitalization.
     """
-    p = market_data_output.get("price")
+    data = raw_market_data_output.get("data", raw_market_data_output)
+    p = data.get("price")
     if p is None or circulating_supply_output is None:
         raise ValueError("Required data missing for marketCap calculation.")
     return p * circulating_supply_output
@@ -259,20 +328,21 @@ def marketCap(market_data_output: Dict[str, Any], circulating_supply_output: flo
 # ------------------------------------------------------------------------------
 # 10. marketCapDiluted
 # ------------------------------------------------------------------------------
-def marketCapDiluted(market_data_output: Dict[str, Any], max_supply_output: float) -> float:
+def marketCapDiluted(raw_market_data_output: Dict[str, Any], max_supply_output: float) -> float:
     """
     Function Name: marketCapDiluted
     Description: Estimates the diluted market capitalization using the current price and maximum supply.
-                 Price data is from Mobula.get_market_data and maximum supply from a source like LunarCrush.get_coin_data.
+                 The raw API output is expected to have a "data" field containing a dictionary with a "price" field.
     Inputs:
-        - market_data_output: Dictionary containing "price".
+        - raw_market_data_output: Raw API output from Mobula.get_market_data.
         - max_supply_output: A float representing the maximum supply.
     Processing:
-        - Multiply price by max supply.
+        - Extract the price and multiply by maximum supply.
     Output:
         - A float representing the diluted market cap.
     """
-    p = market_data_output.get("price")
+    data = raw_market_data_output.get("data", raw_market_data_output)
+    p = data.get("price")
     if p is None or max_supply_output is None:
         raise ValueError("Required data missing for marketCapDiluted calculation.")
     return p * max_supply_output

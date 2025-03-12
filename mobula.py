@@ -55,7 +55,7 @@ class Mobula:
         Raises:
             MobulaAPIError: If the API request fails
         """
-        return self._get("/all", {"fields": fields})["data"]
+        return self._get("/all", {"fields": fields})
 
     def get_blockchains(self) -> List[Dict[str, Any]]:
         """
@@ -100,7 +100,7 @@ class Mobula:
         Raises:
             MobulaAPIError: If the API request fails
         """
-        return self._get("/blockchains")["data"]
+        return self._get("/blockchains")
 
     def get_market_blockchain_pairs(
         self,
@@ -123,7 +123,7 @@ class Mobula:
             "offset": offset,
             "filters": filters
         }
-        return self._get("/market/blockchain/pairs", params)["data"]
+        return self._get("/market/blockchain/pairs", params)
 
     def get_market_blockchain_stats(
         self,
@@ -146,7 +146,7 @@ class Mobula:
                     - tokens_change_24h (float)
                     - tokens_change_total (float, nullable)
         """
-        return self._get("/market/blockchain/stats", {"blockchain": blockchain, "factory": factory})["data"]
+        return self._get("/market/blockchain/stats", {"blockchain": blockchain, "factory": factory})
 
     def get_cefi_funding_rate(
         self,
@@ -173,7 +173,7 @@ class Mobula:
                     - base (str): Base currency
                     - quote (str, nullable): Quote currency
         """
-        return self._get("/market/cefi/funding-rate", {"symbol": symbol, "quote": quote})["data"]
+        return self._get("/market/cefi/funding-rate", {"symbol": symbol, "quote": quote})
 
     def get_feed_create(
         self,
@@ -208,7 +208,7 @@ class Mobula:
         latest: Optional[str] = None
     ) -> Dict[str, Any]:
         params = {k: v for k, v in locals().items() if k != 'self' and v is not None}
-        return self._get("/market/history/pair", params)["data"]
+        return self._get("/market/history/pair", params)
 
     def get_market_history(
         self,
@@ -244,7 +244,7 @@ class Mobula:
             MobulaAPIError: If the API request fails
         """
         params = {k: v for k, v in locals().items() if k != 'self' and v is not None}
-        return self._get("/market/history", params)["data"]
+        return self._get("/market/history", params)
 
     def get_market_multi_data(
         self,
@@ -320,7 +320,7 @@ class Mobula:
             MobulaAPIError: For failed API requests
         """
         params = {k: v for k, v in locals().items() if k != 'self' and v is not None}
-        return self._get("/market/multi-history", params)["data"]
+        return self._get("/market/multi-history", params)
 
     def get_market_nft(
         self,
@@ -343,7 +343,7 @@ class Mobula:
             MobulaAPIError: If the API request fails
             ValueError: If missing required parameters
         """
-        return self._get("/market/nft", {"asset": asset, "chain": chain})["data"]
+        return self._get("/market/nft", {"asset": asset, "chain": chain})
 
     def get_market_pair(
         self,
@@ -376,7 +376,7 @@ class Mobula:
                     - operation (str): Trade action (e.g., "Buy"/"Sell")
         """
         params = {k: v for k, v in locals().items() if k != 'self' and v is not None}
-        return self._get("/market/pair", params)["data"]
+        return self._get("/market/pair", params)
 
     def get_market_pairs(
         self,
@@ -441,7 +441,7 @@ class Mobula:
             MobulaAPIError: If the API request fails
         """
         params = {k: v for k, v in locals().items() if k != 'self' and v is not None}
-        return self._get("/market/pairs", params)["data"]
+        return self._get("/market/pairs", params)
 
     def get_market_query_token(
         self,
@@ -473,7 +473,7 @@ class Mobula:
                 - pairs (list): Trading pair details
         """
         params = {k: v for k, v in locals().items() if k != 'self' and v is not None}
-        return self._get("/market/query/token", params)["data"]
+        return self._get("/market/query/token", params)
 
     #region Wallet Endpoints
     def get_wallet_nfts(
@@ -746,7 +746,7 @@ class Mobula:
             "blockchains": blockchains,
             "symbols": symbols
         }
-        return self._get("/multi-metadata", params)["data"]
+        return self._get("/multi-metadata", params)
 
     def get_metadata_categories(self) -> List[Dict[str, Any]]:
         """
@@ -784,7 +784,7 @@ class Mobula:
                     - type (str)
                     - tickers (list)
         """
-        return self._get("/metadata/news", {"symbols": symbols})["data"]
+        return self._get("/metadata/news", {"symbols": symbols})
 
     def get_metadata_trendings(
         self,
@@ -950,7 +950,7 @@ class Mobula:
                     - volumeUSD (float)
 
         """
-        return self._get("/market/token-vs-market", {"tag": tag})["data"]
+        return self._get("/market/token-vs-market", {"tag": tag})
 
     def get_market_total(self) -> Dict[str, Any]:
         """
@@ -1003,7 +1003,7 @@ class Mobula:
                     - volume (float)
                     - pairs (list): Trading pairs
         """
-        return self._get("/search", {"input": input, "filters": filters})["data"]
+        return self._get("/search", {"input": input, "filters": filters})
     #endregion
 
     def get_market_data(
@@ -1068,7 +1068,7 @@ class Mobula:
         params = {k: v for k, v in locals().items() if k != 'self' and v is not None}
         if not params:
             raise ValueError("At least one identifier required")
-        return self._get("/market/data", params)["data"]
+        return self._get("/market/data", params)
 
     def get_wallet_portfolio(
         self,
@@ -1155,7 +1155,7 @@ class Mobula:
             "accuracy": accuracy,
             "testnet": testnet
         }
-        return self._get("/wallet/portfolio", {k: v for k, v in params.items() if v is not None})["data"]
+        return self._get("/wallet/portfolio", {k: v for k, v in params.items() if v is not None})
 
     def get_blockchain_pairs(
         self,
@@ -1228,4 +1228,4 @@ class Mobula:
             "offset": offset,
             "filters": filters
         }
-        return self._get("/market/blockchain/pairs", params)["data"]
+        return self._get("/market/blockchain/pairs", params)
