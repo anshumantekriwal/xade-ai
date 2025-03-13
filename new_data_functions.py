@@ -1,224 +1,279 @@
+# file: analytics_functions.py
+"""
+This file contains a set of functions that parse raw Mobula API outputs (and in one case, LunarCrush)
+in order to compute various analytics metrics. Each function has been updated to match the data
+shapes specified in mobula.yaml (the 'raw' API responses), rather than relying on simplified or
+pre-processed data.
+"""
+
+import statistics
+import numpy as np
 from typing import Any, Dict, List
+import json
+
+def socialSentimentScore(social_coin_data_output: Dict[str, Any]) -> float:
+    """
+    Function Name: socialSentimentScore
+    Description:
+        Computes an overall social sentiment score for an asset.
+        Data should come from a social API (e.g. LunarCrush.get_coin_data),
+        expected to have "sentiment" as a float field.
+
+    Example Input:
+    {
+      "sentiment": 3.4,
+      ...
+    }
+
+    Output: float
+    """
+    sentiment = social_coin_data_output.get("data")
+    print(sentiment)
+    if sentiment is None:
+        raise ValueError("Social sentiment data ('sentiment') not provided.")
+    return float(sentiment)
 
 # ------------------------------------------------------------------------------
-# 11. liquidity
+# 32. altRank
 # ------------------------------------------------------------------------------
-def liquidity(pair_output: Dict[str, Any]) -> float:
+def altRank(social_coin_data_output: Dict[str, Any]) -> float:
     """
-    Function Name: liquidity
-    Description: Extracts the liquidity metric from a trading pair object.
-                 The raw API output is expected to be a dictionary representing a single trading pair
-                 from Mobula.get_market_pairs, containing a "liquidity" field.
-    Inputs:
-        - pair_output: Dictionary representing a single trading pair.
+    Function Name: altRank
+    Description:
+        Returns the altRank from a social API (e.g. LunarCrush).
+        Expects "alt_rank" in the dictionary.
+
+    Example Input:
+    {
+      "alt_rank": 57,
+      ...
+    }
+
+    Output: float
+    """
+    rank = social_coin_data_output.get("alt_rank")
+    if rank is None:
+        raise ValueError("altRank data not provided.")
+    return float(rank)
+
+# ------------------------------------------------------------------------------
+# 33. galaxyScore
+# ------------------------------------------------------------------------------
+def galaxyScore(social_coin_data_output: Dict[str, Any]) -> float:
+    """
+    Function Name: galaxyScore
+    Description:
+        Retrieves the Galaxy Score from a social API (e.g. LunarCrush).
+        Expects "galaxy_score" in the dictionary.
+
+    Example Input:
+    {
+      "galaxy_score": 64.23,
+      ...
+    }
+
+    Output: float
+    """
+    score = social_coin_data_output.get("galaxy_score")
+    if score is None:
+        raise ValueError("Galaxy Score not provided.")
+    return float(score)
+
+# ------------------------------------------------------------------------------
+# 34. marketSentimentIndex
+# ------------------------------------------------------------------------------
+def marketSentimentIndex(market_data_output: Dict[str, Any], social_sentiment_score: float) -> float:
+    """
+    Function Name: marketSentimentIndex
+    Description:
+        Combines technical market volatility (e.g. from Mobula /market/history)
+        with a social sentiment score (from a LunarCrush-like API) to create
+        a composite index.
+
     Processing:
-        - Extract and return the liquidity value.
-    Output:
-        - A float representing the liquidity of the trading pair.
+      - Attempt to parse close prices from market_data_output["data"]["price_history"].
+      - Compute a volatility measure, invert it for a 'technical_index'.
+      - Average that with social_sentiment_score.
+
+    Output: float
     """
-    liq = pair_output.get('data').get('pairs')[0].get('liquidity')
+    import statistics
+
+    # Default fallback if no valid price history
+    technical_index = 1.0
+
+    if ("data" in market_data_output
+        and isinstance(market_data_output["data"], dict)
+        and "price_history" in market_data_output["data"]):
+        ph = market_data_output["data"]["price_history"]
+        if len(ph) > 1:
+            closes = [row[4] for row in ph]
+            returns = []
+            for i in range(1, len(closes)):
+                prev_close = closes[i - 1]
+                if prev_close != 0:
+                    returns.append((closes[i] - prev_close) / prev_close)
+            if len(returns) > 1:
+                vol = statistics.stdev(returns)
+                if vol != 0:
+                    technical_index = 1 / vol
+                else:
+                    technical_index = 999999.0
+
+    return (technical_index + social_sentiment_score) / 2.0
+
+# ------------------------------------------------------------------------------
+# 35. socialEngagementRate
+# ------------------------------------------------------------------------------
+def socialEngagementRate(social_coin_data_output: Dict[str, Any]) -> float:
+    """
+    Function Name: socialEngagementRate
+    Description:
+        Calculates average social engagement per post from a social API
+        (e.g. "interactions_24h" / "num_posts").
+
+    Example Input:
+    {
+      "interactions_24h": 24000,
+      "num_posts": 80,
+      ...
+    }
+
+    Output: float
+    """
+    interactions = social_coin_data_output.get("interactions_24h")
+    num_posts = social_coin_data_output.get("num_posts")
+    if interactions is None or num_posts is None or num_posts == 0:
+        raise ValueError("Insufficient social engagement data.")
+    return interactions / num_posts
+
+# ------------------------------------------------------------------------------
+# 36. compositeRiskScore
+# ------------------------------------------------------------------------------
+def compositeRiskScore(market_volatility: float, social_volatility: float) -> float:
+    """
+    Function Name: compositeRiskScore
+    Description:
+        Averages market volatility and social sentiment volatility into a single
+        risk score.
+
+    Output: float
+    """
+    return (market_volatility + social_volatility) / 2.0
+
+# ------------------------------------------------------------------------------
+# 37. liquidityAdjustedPrice
+# ------------------------------------------------------------------------------
+def liquidityAdjustedPrice(market_data_output: Dict[str, Any], pair_output: Dict[str, Any]) -> float:
+    """
+    Function Name: liquidityAdjustedPrice
+    Description:
+        Adjusts the current price (from 'market_data_output') by a liquidity factor
+        (from 'pair_output').
+
+    Example:
+      - market_data_output = {"price": 1.23}
+      - pair_output = {"liquidity": 4500}
+
+    Output: float
+    """
+    price_val = market_data_output.get("price")
+    if price_val is None:
+        raise ValueError("market_data_output missing 'price'.")
+    liq = pair_output.get("liquidity")
     if liq is None:
-        raise ValueError("Liquidity not found in pair_output.")
-    return liq
+        raise ValueError("pair_output missing 'liquidity'.")
+
+    normalization_constant = 1000.0
+    liquidity_factor = liq / normalization_constant
+    return price_val * (1 + liquidity_factor)
 
 # ------------------------------------------------------------------------------
-# 13. offChainVolume
+# 38. decentralizationScore
 # ------------------------------------------------------------------------------
-def offChainVolume(multi_data_output: Dict[str, Any], symbol) -> float:
+def decentralizationScore(token_holders_output: Dict[str, Any]) -> float:
     """
-    Function Name: offChainVolume
-    Description: Retrieves the off-chain trading volume.
-                 The raw API output is expected to have a "data" field (or be a direct asset object)
-                 containing the "off_chain_volume" field, as returned by Mobula.get_market_multi_data.
-    Inputs:
-        - multi_data_output: Dictionary containing market data for an asset.
-    Processing:
-        - Extract and return the off-chain volume value.
-    Output:
-        - A float representing the off-chain trading volume.
+    Function Name: decentralizationScore
+    Description:
+        Evaluates decentralization by summing the top 10 holders' amounts
+        and comparing to total. Data from Mobula's /market/token/holders.
+
+    Raw example:
+    {
+      "data": [
+        {
+          "address": "...",
+          "amount": 1234,
+          ...
+        },
+        ...
+      ],
+      "total_count": ...
+    }
+
+    Output: float
     """
-    data = multi_data_output.get("data").get(symbol)
-    off_volume = data.get("off_chain_volume")
-    if off_volume is None:
-        raise ValueError("Off-chain volume not found in multi_data_output.")
-    return off_volume
+    holders = token_holders_output.get("data", [])
+    if not isinstance(holders, list) or not holders:
+        raise ValueError("No token holder data provided.")
+    sorted_holders = sorted(holders, key=lambda h: h.get("amount", 0), reverse=True)
+    top_10_amount = sum(h.get("amount", 0) for h in sorted_holders[:10])
+    total_amount = sum(h.get("amount", 0) for h in sorted_holders)
+    if total_amount == 0:
+        raise ValueError("Total holdings is zero; cannot compute ratio.")
+    return top_10_amount / total_amount
 
 # ------------------------------------------------------------------------------
-# 14. volume7d
+# 39. socialVolatilityIndex
 # ------------------------------------------------------------------------------
-def volume7d(daily_volumes_output: List[float]) -> float:
+def socialVolatilityIndex(social_sentiment_history: List[float]) -> float:
     """
-    Function Name: volume7d
-    Description: Aggregates trading volume over the last 7 days.
-                 The input is a list of daily trading volume figures.
-    Inputs:
-        - daily_volumes_output: List of daily trading volume numbers.
-    Processing:
-        - Sum the volumes for the last 7 days.
-    Output:
-        - A float representing the total 7-day trading volume.
+    Function Name: socialVolatilityIndex
+    Description:
+        Measures the volatility (std. dev.) of social sentiment scores.
+
+    Input: e.g. [3.0, 3.4, 2.8, 4.1, ...]
+
+    Output: float
     """
-    if len(daily_volumes_output) < 7:
-        raise ValueError("Insufficient daily volume data for 7-day aggregation.")
-    return sum(daily_volumes_output[-7:])
+    if len(social_sentiment_history) < 2:
+        raise ValueError("Need at least 2 sentiment points to compute volatility.")
+    return statistics.stdev(social_sentiment_history)
 
 # ------------------------------------------------------------------------------
-# 15. volumeChange24h
+# 40. marketMomentumScore
 # ------------------------------------------------------------------------------
-def volumeChange24h(current_market_data_output: Dict[str, Any], previous_market_data_output: Dict[str, Any]) -> float:
+def marketMomentumScore(market_history_output: Dict[str, Any], short_period: int, long_period: int) -> float:
     """
-    Function Name: volumeChange24h
-    Description: Calculates the percentage change in trading volume over the past 24 hours.
-                 The raw API outputs are expected to have a "data" field containing a dictionary with a "volume" field.
-    Inputs:
-        - current_market_data_output: Dictionary containing current market data.
-        - previous_market_data_output: Dictionary containing market data from 24 hours ago.
-    Processing:
-        - Extract the "volume" from each output and compute percentage change: ((current - previous) / previous) * 100.
-    Output:
-        - A float representing the 24-hour volume change percentage.
-    """
-    current_data = current_market_data_output.get("data", current_market_data_output)
-    previous_data = previous_market_data_output.get("data", previous_market_data_output)
-    current_vol = current_data.get("volume")
-    previous_vol = previous_data.get("volume")
-    if current_vol is None or previous_vol is None:
-        raise ValueError("Required volume data missing for computation.")
-    if previous_vol == 0:
-        raise ValueError("Previous volume is zero; cannot compute change.")
-    return ((current_vol - previous_vol) / previous_vol) * 100
+    Function Name: marketMomentumScore
+    Description:
+        Calculates a momentum indicator by comparing short-term vs. long-term
+        SMAs of the close price from Mobula's /market/history.
 
-# ------------------------------------------------------------------------------
-# 16. priceChange24h
-# ------------------------------------------------------------------------------
-def priceChange24h(current_market_data_output: Dict[str, Any], history_24h_output: Dict[str, Any]) -> float:
-    """
-    Function Name: priceChange24h
-    Description: Calculates the percentage change in price over the past 24 hours.
-                 The raw API outputs are expected to have a "data" field containing a dictionary with a "price" field.
-                 Current price is from Mobula.get_market_data and the 24h-old price is from Mobula.get_market_history.
-    Inputs:
-        - current_market_data_output: Dictionary containing current market data.
-        - history_24h_output: Dictionary containing market history data from 24 hours ago.
-    Processing:
-        - Extract the "price" from each output and compute percentage change: ((current - old) / old) * 100.
-    Output:
-        - A float representing the 24-hour price change percentage.
-    """
-    current_data = current_market_data_output.get("data", current_market_data_output)
-    history_data = history_24h_output.get("data", history_24h_output)
-    current_price = current_data.get("price")
-    old_price = history_data.get("price")
-    if current_price is None or old_price is None:
-        raise ValueError("Required price data missing for computation.")
-    if old_price == 0:
-        raise ValueError("Old price is zero; cannot compute change.")
-    return ((current_price - old_price) / old_price) * 100
+    Raw /market/history example:
+    {
+      "data": {
+        "price_history": [
+          [time, open, high, low, close, volume],
+          ...
+        ]
+      }
+    }
 
-# ------------------------------------------------------------------------------
-# 17. priceChange1h
-# ------------------------------------------------------------------------------
-def priceChange1h(current_market_data_output: Dict[str, Any], history_1h_output: Dict[str, Any]) -> float:
+    Output: float (momentum score).
     """
-    Function Name: priceChange1h
-    Description: Calculates the percentage change in price over the past 1 hour.
-                 The raw API outputs are expected to have a "data" field containing a dictionary with a "price" field.
-                 Current price is from Mobula.get_market_data and the 1h-old price is from Mobula.get_market_history.
-    Inputs:
-        - current_market_data_output: Dictionary containing current market data.
-        - history_1h_output: Dictionary containing market history data from 1 hour ago.
-    Processing:
-        - Extract the "price" from each output and compute percentage change.
-    Output:
-        - A float representing the 1-hour price change percentage.
-    """
-    current_data = current_market_data_output.get("data", current_market_data_output)
-    history_data = history_1h_output.get("data", history_1h_output)
-    current_price = current_data.get("price")
-    old_price = history_data.get("price")
-    if current_price is None or old_price is None:
-        raise ValueError("Required price data missing for computation.")
-    if old_price == 0:
-        raise ValueError("Old price is zero; cannot compute change.")
-    return ((current_price - old_price) / old_price) * 100
+    if "data" not in market_history_output or not isinstance(market_history_output["data"], dict):
+        raise ValueError("market_history_output missing 'data'.")
+    if "price_history" not in market_history_output["data"]:
+        raise ValueError("No 'price_history' found in market_history_output['data'].")
 
-# ------------------------------------------------------------------------------
-# 18. priceChange7d
-# ------------------------------------------------------------------------------
-def priceChange7d(current_market_data_output: Dict[str, Any], history_7d_output: Dict[str, Any]) -> float:
-    """
-    Function Name: priceChange7d
-    Description: Calculates the percentage change in price over the past 7 days.
-                 The raw API outputs are expected to have a "data" field containing a dictionary with a "price" field.
-                 Current price is from Mobula.get_market_data and the 7d-old price is from Mobula.get_market_history.
-    Inputs:
-        - current_market_data_output: Dictionary containing current market data.
-        - history_7d_output: Dictionary containing market history data from 7 days ago.
-    Processing:
-        - Extract the "price" from each output and compute percentage change.
-    Output:
-        - A float representing the 7-day price change percentage.
-    """
-    current_data = current_market_data_output.get("data", current_market_data_output)
-    history_data = history_7d_output.get("data", history_7d_output)
-    current_price = current_data.get("price")
-    old_price = history_data.get("price")
-    if current_price is None or old_price is None:
-        raise ValueError("Required price data missing for computation.")
-    if old_price == 0:
-        raise ValueError("Old price is zero; cannot compute change.")
-    return ((current_price - old_price) / old_price) * 100
+    ph = market_history_output["data"]["price_history"]
+    closes = [row[4] for row in ph]
+    if len(closes) < long_period:
+        raise ValueError("Not enough close data to compute momentum.")
 
-# ------------------------------------------------------------------------------
-# 19. priceChange30d
-# ------------------------------------------------------------------------------
-def priceChange30d(current_market_data_output: Dict[str, Any], history_30d_output: Dict[str, Any]) -> float:
-    """
-    Function Name: priceChange30d
-    Description: Calculates the percentage change in price over the past 30 days.
-                 The raw API outputs are expected to have a "data" field containing a dictionary with a "price" field.
-                 Current price is from Mobula.get_market_data and the 30d-old price is from Mobula.get_market_history.
-    Inputs:
-        - current_market_data_output: Dictionary containing current market data.
-        - history_30d_output: Dictionary containing market history data from 30 days ago.
-    Processing:
-        - Extract the "price" from each output and compute percentage change.
-    Output:
-        - A float representing the 30-day price change percentage.
-    """
-    current_data = current_market_data_output.get("data", current_market_data_output)
-    history_data = history_30d_output.get("data", history_30d_output)
-    current_price = current_data.get("price")
-    old_price = history_data.get("price")
-    if current_price is None or old_price is None:
-        raise ValueError("Required price data missing for computation.")
-    if old_price == 0:
-        raise ValueError("Old price is zero; cannot compute change.")
-    return ((current_price - old_price) / old_price) * 100
-
-# ------------------------------------------------------------------------------
-# 20. priceChange1y
-# ------------------------------------------------------------------------------
-def priceChange1y(current_market_data_output: Dict[str, Any], history_1y_output: Dict[str, Any]) -> float:
-    """
-    Function Name: priceChange1y
-    Description: Calculates the percentage change in price over the past 1 year.
-                 The raw API outputs are expected to have a "data" field containing a dictionary with a "price" field.
-                 Current price is from Mobula.get_market_data and the 1y-old price is from Mobula.get_market_history.
-    Inputs:
-        - current_market_data_output: Dictionary containing current market data.
-        - history_1y_output: Dictionary containing market history data from 1 year ago.
-    Processing:
-        - Extract the "price" from each output and compute percentage change.
-    Output:
-        - A float representing the 1-year price change percentage.
-    """
-    current_data = current_market_data_output.get("data", current_market_data_output)
-    history_data = history_1y_output.get("data", history_1y_output)
-    current_price = current_data.get("price")
-    old_price = history_data.get("price")
-    if current_price is None or old_price is None:
-        raise ValueError("Required price data missing for computation.")
-    if old_price == 0:
-        raise ValueError("Old price is zero; cannot compute change.")
-    return ((current_price - old_price) / old_price) * 100
+    short_sma = sum(closes[-short_period:]) / short_period
+    long_sma = sum(closes[-long_period:]) / long_period
+    if long_sma == 0:
+        raise ValueError("Long-term SMA is zero; cannot compute momentum.")
+    return (short_sma - long_sma) / long_sma

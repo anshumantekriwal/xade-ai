@@ -81,7 +81,7 @@ class LunarCrush:
         Raises:
             SocialAPIError: If the API request fails
         """
-        return self._get(f"/coins/{coin}/v1")["data"]
+        return self._get(f"/coins/{coin}/v1")
 
     def get_coin_metadata(self, coin: str) -> Dict[str, Any]:
         """
@@ -117,7 +117,7 @@ class LunarCrush:
         Raises:
             SocialAPIError: If the API request fails
         """
-        return self._get(f"/coins/{coin}/meta/v1")["data"]
+        return self._get(f"/coins/{coin}/meta/v1")
 
     def get_nft_data(self, nft: str) -> Dict[str, Any]:
         """
@@ -149,7 +149,7 @@ class LunarCrush:
         Raises:
             SocialAPIError: If the API request fails
         """
-        return self._get(f"/nfts/{nft}/v1")["data"]
+        return self._get(f"/nfts/{nft}/v1")
 
     def get_topic_news(self, topic: str) -> Dict[str, Any]:
         """
@@ -182,7 +182,7 @@ class LunarCrush:
         Raises:
             SocialAPIError: If the API request fails
         """
-        return self._get(f"/topic/{topic}/news/v1")["data"]
+        return self._get(f"/topic/{topic}/news/v1")
 
     def get_coins_list(self) -> List[Dict[str, Any]]:
         """
@@ -213,7 +213,7 @@ class LunarCrush:
         Raises:
             SocialAPIError: If the API request fails
         """
-        return self._get("/coins/list/v1")["data"]
+        return self._get("/coins/list/v1")
 
     def get_topic_summary(self, topic: str) -> Dict[str, Any]:
         """
@@ -245,7 +245,7 @@ class LunarCrush:
         Raises:
             SocialAPIError: If the API request fails
         """
-        return self._get(f"/topic/{topic}/v1")["data"]
+        return self._get(f"/topic/{topic}/v1")
 
 
 class CryptoPanic:
