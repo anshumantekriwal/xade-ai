@@ -3,9 +3,6 @@ import statistics
 from typing import List, Dict, Any
 import numpy as np
 
-# ------------------------------------------------------------------------------
-# 1. calculateSMA
-# ------------------------------------------------------------------------------
 def calculateSMA(raw_market_history_output: Dict[str, Any], period: int) -> float:
     """
     Function Name: calculateSMA
@@ -35,9 +32,7 @@ def calculateSMA(raw_market_history_output: Dict[str, Any], period: int) -> floa
         raise ValueError("Not enough data points to compute SMA.")
     return sum(prices[-period:]) / period
 
-# ------------------------------------------------------------------------------
-# 2. calculateEMA
-# ------------------------------------------------------------------------------
+
 def calculateEMA(raw_market_history_output: Dict[str, Any], period: int) -> float:
     """
     Function Name: calculateEMA
@@ -70,9 +65,6 @@ def calculateEMA(raw_market_history_output: Dict[str, Any], period: int) -> floa
         ema = price * k + ema * (1 - k)
     return ema
 
-# ------------------------------------------------------------------------------
-# 3. calculateRSI
-# ------------------------------------------------------------------------------
 def calculateRSI(raw_market_history_output: Dict[str, Any], period: int = 14) -> float:
     """
     Function Name: calculateRSI
@@ -117,9 +109,6 @@ def calculateRSI(raw_market_history_output: Dict[str, Any], period: int = 14) ->
     rs = avg_gain / avg_loss
     return 100 - (100 / (1 + rs))
 
-# ------------------------------------------------------------------------------
-# 4. calculateMACD
-# ------------------------------------------------------------------------------
 def calculateMACD(raw_market_history_output: Dict[str, Any], fast_period: int, slow_period: int, signal_period: int) -> Dict[str, float]:
     """
     Function Name: calculateMACD
@@ -190,9 +179,7 @@ def calculateMACD(raw_market_history_output: Dict[str, Any], fast_period: int, s
         "histogram": histogram[-1]
     }
 
-# ------------------------------------------------------------------------------
-# 5. calculateVolatility
-# ------------------------------------------------------------------------------
+
 def calculateVolatility(raw_market_history_output: Dict[str, Any], time_frame: str = "24h") -> float:
     """
     Function Name: calculateVolatility
@@ -222,9 +209,7 @@ def calculateVolatility(raw_market_history_output: Dict[str, Any], time_frame: s
     returns = [(prices[i] - prices[i - 1]) / prices[i - 1] for i in range(1, len(prices))]
     return statistics.stdev(returns)
 
-# ------------------------------------------------------------------------------
-# 6. determineTrend
-# ------------------------------------------------------------------------------
+
 def determineTrend(raw_market_history_output: Dict[str, Any], short_period: int, long_period: int) -> str:
     """
     Function Name: determineTrend
@@ -261,301 +246,6 @@ def determineTrend(raw_market_history_output: Dict[str, Any], short_period: int,
     else:
         return "sideways"
 
-# ------------------------------------------------------------------------------
-# 7. price
-# ------------------------------------------------------------------------------
-def price(raw_market_data_output: Dict[str, Any]) -> float:
-    """
-    Function Name: price
-    Description: Retrieves the current price from market data.
-                 The raw API output is expected to have a "data" field containing a dictionary with a "price" field.
-    Inputs:
-        - raw_market_data_output: Raw API output from Mobula.get_market_data.
-    Processing:
-        - Extract and return the price from the nested "data" field if present; otherwise, use the top-level field.
-    Output:
-        - A float representing the current price in USD.
-    """
-    data = raw_market_data_output.get("data", raw_market_data_output)
-    p = data.get("price")
-    if p is None:
-        raise ValueError("Price not found in market data output.")
-    return p
-
-# ------------------------------------------------------------------------------
-# 8. volume
-# ------------------------------------------------------------------------------
-def volume(raw_market_data_output: Dict[str, Any]) -> float:
-    """
-    Function Name: volume
-    Description: Retrieves the 24-hour trading volume from market data.
-                 The raw API output is expected to have a "data" field containing a dictionary with a "volume" field.
-    Inputs:
-        - raw_market_data_output: Raw API output from Mobula.get_market_data.
-    Processing:
-        - Extract and return the volume from the nested "data" field if present; otherwise, use the top-level field.
-    Output:
-        - A float representing the trading volume.
-    """
-    data = raw_market_data_output.get("data", raw_market_data_output)
-    vol = data.get("volume")
-    if vol is None:
-        raise ValueError("Volume not found in market data output.")
-    return vol
-
-# ------------------------------------------------------------------------------
-# 9. marketCap
-# ------------------------------------------------------------------------------
-def marketCap(raw_market_data_output: Dict[str, Any], circulating_supply_output: float) -> float:
-    """
-    Function Name: marketCap
-    Description: Calculates market capitalization using the current price and circulating supply.
-                 The raw API output is expected to have a "data" field containing a dictionary with a "price" field.
-    Inputs:
-        - raw_market_data_output: Raw API output from Mobula.get_market_data.
-        - circulating_supply_output: A float representing circulating supply.
-    Processing:
-        - Extract the price and multiply by circulating supply.
-    Output:
-        - A float representing the market capitalization.
-    """
-    data = raw_market_data_output.get("data", raw_market_data_output)
-    p = data.get("price")
-    if p is None or circulating_supply_output is None:
-        raise ValueError("Required data missing for marketCap calculation.")
-    return p * circulating_supply_output
-
-# ------------------------------------------------------------------------------
-# 10. marketCapDiluted
-# ------------------------------------------------------------------------------
-def marketCapDiluted(raw_market_data_output: Dict[str, Any], max_supply_output: float) -> float:
-    """
-    Function Name: marketCapDiluted
-    Description: Estimates the diluted market capitalization using the current price and maximum supply.
-                 The raw API output is expected to have a "data" field containing a dictionary with a "price" field.
-    Inputs:
-        - raw_market_data_output: Raw API output from Mobula.get_market_data.
-        - max_supply_output: A float representing the maximum supply.
-    Processing:
-        - Extract the price and multiply by maximum supply.
-    Output:
-        - A float representing the diluted market cap.
-    """
-    data = raw_market_data_output.get("data", raw_market_data_output)
-    p = data.get("price")
-    if p is None or max_supply_output is None:
-        raise ValueError("Required data missing for marketCapDiluted calculation.")
-    return p * max_supply_output
-
-# ------------------------------------------------------------------------------
-# 11. liquidity
-# ------------------------------------------------------------------------------
-def liquidity(market_pairs_output: Dict[str, Any]) -> float:
-    """
-    Function Name: liquidity
-    Description: Extracts the liquidity metric from a trading pair object.
-                 The raw API output is expected to be a dictionary representing a single trading pair
-                 from Mobula.get_market_pairs, containing a "liquidity" field.
-    Inputs:
-        - market_pairs_output: Dictionary representing a single trading pair.
-    Processing:
-        - Extract and return the liquidity value.
-    Output:
-        - A float representing the liquidity of the trading pair.
-    """
-    liq = market_pairs_output.get('data').get('pairs')[0].get('liquidity')
-    if liq is None:
-        raise ValueError("Liquidity not found in pair_output.")
-    return liq
-# ------------------------------------------------------------------------------
-# 13. offChainVolume
-# ------------------------------------------------------------------------------
-def offChainVolume(multi_data_output: Dict[str, Any], symbol: str) -> float:
-    """
-    Function Name: offChainVolume
-    Description: Retrieves the off-chain trading volume from market/multi-data response.
-                 Raw API path: data[SYMBOL].off_chain_volume
-    Inputs:
-        - multi_data_output: Response from Mobula.get_market_multi_data
-        - symbol: Asset symbol to lookup
-    Output:
-        - Float representing off-chain trading volume
-    """
-    asset_data = multi_data_output.get("data", {}).get(symbol)
-    if not asset_data:
-        raise ValueError(f"Asset data for {symbol} not found")
-    return asset_data.get("off_chain_volume", 0)
-
-# ------------------------------------------------------------------------------
-# 14. volume7d
-# ------------------------------------------------------------------------------
-def volume7d(multi_data_output: Dict[str, Any], symbol: str) -> float:
-    """
-    Function Name: volume7d
-    Description: Retrieves 7-day trading volume from market/multi-data response.
-                 Raw API path: data[SYMBOL].volume_7d
-    Inputs:
-        - multi_data_output: Response from Mobula.get_market_multi_data
-        - symbol: Asset symbol to lookup
-    Output:
-        - Float representing 7-day trading volume
-    """
-    asset_data = multi_data_output.get("data", {}).get(symbol)
-    if not asset_data:
-        raise ValueError(f"Asset data for {symbol} not found")
-    return asset_data.get("volume_7d", 0)
-
-# ------------------------------------------------------------------------------
-# 15. volumeChange24h
-# ------------------------------------------------------------------------------
-def volumeChange24h(multi_data_output: Dict[str, Any], symbol: str) -> float:
-    """
-    Function Name: volumeChange24h
-    Description: Retrieves 24h volume change from market/multi-data response.
-                 Raw API path: data[SYMBOL].volume_change_24h
-    Inputs:
-        - multi_data_output: Response from Mobula.get_market_multi_data
-        - symbol: Asset symbol to lookup
-    Output:
-        - Float representing 24h volume change percentage
-    """
-    asset_data = multi_data_output.get("data", {}).get(symbol)
-    if not asset_data:
-        raise ValueError(f"Asset data for {symbol} not found")
-    return asset_data.get("volume_change_24h", 0)
-
-# ------------------------------------------------------------------------------
-# 16-20. Price Change Functions
-# ------------------------------------------------------------------------------
-def priceChange24h(market_data_output: Dict[str, Any]) -> float:
-    """
-    Function Name: priceChange24h
-    Description: Retrieves 24h price change from market/data response.
-                 Raw API path: data.price_change_24h
-    Inputs:
-        - market_data_output: Response from Mobula.get_market_data
-    Output:
-        - Float representing 24h price change percentage
-    """
-    return market_data_output.get("data", {}).get("price_change_24h", 0)
-
-def priceChange1h(market_data_output: Dict[str, Any]) -> float:
-    """
-    Function Name: priceChange1h
-    Description: Retrieves 1h price change from market/data response.
-                 Raw API path: data.price_change_1h
-    Inputs:
-        - market_data_output: Response from Mobula.get_market_data
-    Output:
-        - Float representing 1h price change percentage
-    """
-    return market_data_output.get("data", {}).get("price_change_1h", 0)
-
-def priceChange7d(market_data_output: Dict[str, Any]) -> float:
-    """
-    Function Name: priceChange7d
-    Description: Retrieves 7d price change from market/data response.
-                 Raw API path: data.price_change_7d
-    Inputs:
-        - market_data_output: Response from Mobula.get_market_data
-    Output:
-        - Float representing 7d price change percentage
-    """
-    return market_data_output.get("data", {}).get("price_change_7d", 0)
-
-def priceChange30d(market_data_output: Dict[str, Any]) -> float:
-    """
-    Function Name: priceChange30d
-    Description: Retrieves 30d (1m) price change from market/data response.
-                 Raw API path: data.price_change_1m
-    Inputs:
-        - market_data_output: Response from Mobula.get_market_data
-    Output:
-        - Float representing 30d price change percentage
-    """
-    return market_data_output.get("data", {}).get("price_change_1m", 0)
-
-def priceChange1y(market_data_output: Dict[str, Any]) -> float:
-    """
-    Function Name: priceChange1y
-    Description: Retrieves 1y price change from market/data response.
-                 Raw API path: data.price_change_1y
-    Inputs:
-        - market_data_output: Response from Mobula.get_market_data
-    Output:
-        - Float representing 1y price change percentage
-    """
-    return market_data_output.get("data", {}).get("price_change_1y", 0)
-# ------------------------------------------------------------------------------
-# End of Batch 1 (Functions 1-20)
-# ------------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------------
-# 21. ath (All-Time High)
-# ------------------------------------------------------------------------------
-def ath(market_data: Dict[str, Any]) -> float:
-    """
-    Function Name: ath
-    Description:
-        Returns the all-time high price from market data.
-
-    Raw Mobula /market/multi-data Output (example):
-    {
-      "data": {
-        "BTC": {
-          "ath": 69000,
-          ...
-        }
-      }
-    }
-
-    Output:
-      - Float representing the all-time high price.
-    """
-    if "data" not in market_data:
-        raise ValueError("Missing 'data' in market data")
-    
-    for symbol_data in market_data["data"].values():
-        if "ath" in symbol_data:
-            return float(symbol_data["ath"])
-    
-    raise ValueError("No ATH found in market data")
-
-# ------------------------------------------------------------------------------
-# 22. atl (All-Time Low)
-# ------------------------------------------------------------------------------
-def atl(market_data: Dict[str, Any]) -> float:
-    """
-    Function Name: atl
-    Description:
-        Returns the all-time low price from market data.
-
-    Raw Mobula /market/multi-data Output (example):
-    {
-      "data": {
-        "BTC": {
-          "atl": 0.01,
-          ...
-        }
-      }
-    }
-
-    Output:
-      - Float representing the all-time low price.
-    """
-    if "data" not in market_data:
-        raise ValueError("Missing 'data' in market data")
-    
-    for symbol_data in market_data["data"].values():
-        if "atl" in symbol_data:
-            return float(symbol_data["atl"])
-    
-    raise ValueError("No ATL found in market data")
-
-# ------------------------------------------------------------------------------
-# 23. marketCapToVolumeRatio
-# ------------------------------------------------------------------------------
 def marketCapToVolumeRatio(asset_data: Dict[str, Any]) -> float:
     """
     Function Name: marketCapToVolumeRatio
@@ -586,9 +276,7 @@ def marketCapToVolumeRatio(asset_data: Dict[str, Any]) -> float:
         raise ValueError("Invalid or missing market_cap or volume in asset_data.")
     return market_cap / volume_val
 
-# ------------------------------------------------------------------------------
-# 24. riskAdjustedReturn
-# ------------------------------------------------------------------------------
+
 def riskAdjustedReturn(market_history_output: Dict[str, Any]) -> float:
     """
     Function Name: riskAdjustedReturn
@@ -639,9 +327,6 @@ def riskAdjustedReturn(market_history_output: Dict[str, Any]) -> float:
         return float("inf")
     return avg_return / vol
 
-# ------------------------------------------------------------------------------
-# 25. priceStabilityScore
-# ------------------------------------------------------------------------------
 def priceStabilityScore(market_history_output: Dict[str, Any], period: int = 20) -> float:
     """
     Function Name: priceStabilityScore
@@ -687,9 +372,7 @@ def priceStabilityScore(market_history_output: Dict[str, Any], period: int = 20)
     normalized_deviation = avg_dev / sma
     return 1 / (1 + normalized_deviation)
 
-# ------------------------------------------------------------------------------
-# 26. tradeActivityIntensity
-# ------------------------------------------------------------------------------
+
 def tradeActivityIntensity(trades_output: Dict[str, Any]) -> float:
     """
     Function Name: tradeActivityIntensity
@@ -714,9 +397,6 @@ def tradeActivityIntensity(trades_output: Dict[str, Any]) -> float:
     trades_list = trades_output.get("data", [])
     return float(len(trades_list))
 
-# ------------------------------------------------------------------------------
-# 27. marketBreadthIndex
-# ------------------------------------------------------------------------------
 def marketBreadthIndex(assets_data_output: Dict[str, Any]) -> float:
     """
     Function Name: marketBreadthIndex
@@ -752,9 +432,7 @@ def marketBreadthIndex(assets_data_output: Dict[str, Any]) -> float:
     positive_count = sum(1 for asset in assets_list if asset.get("price_change_24h", 0) > 0)
     return positive_count / len(assets_list)
 
-# ------------------------------------------------------------------------------
-# 28. priceCorrelationMatrix
-# ------------------------------------------------------------------------------
+
 def priceCorrelationMatrix(multi_history_output: Dict[str, Any]) -> np.ndarray:
     """
     Function Name: priceCorrelationMatrix
@@ -811,9 +489,7 @@ def priceCorrelationMatrix(multi_history_output: Dict[str, Any]) -> np.ndarray:
 
     return corr_matrix
 
-# ------------------------------------------------------------------------------
-# 29. assetUtilizationRate
-# ------------------------------------------------------------------------------
+
 def assetUtilizationRate(asset_data: Dict[str, Any]) -> float:
     """
     Function Name: assetUtilizationRate
@@ -839,77 +515,6 @@ def assetUtilizationRate(asset_data: Dict[str, Any]) -> float:
         raise ValueError("Invalid or missing 'volume' or 'circulating_supply'.")
     return volume_val / circ_supply
 
-# ------------------------------------------------------------------------------
-# 30. topicNews
-# ------------------------------------------------------------------------------
-
-from typing import Any, Dict, List
-
-def topicNews(topic_news_output: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """
-    Function Name: topicNews
-    Description:
-        Expects a dictionary representing "topic news" data, typically from 
-        LunarCrush.get_topic_news or a similar API. Returns a list of dictionaries
-        in a standardized format for each news article.
-
-    Example input dictionary (simplified):
-    {
-      "data": [
-        {
-          "post_type": "news",
-          "post_title": "Thailand SEC Adds USDC, USDT Stablecoins...",
-          "post_link": "https://...",
-          "post_created": 1741611954,
-          "post_sentiment": 3.46,
-          "creator_name": "CoinDesk",
-          "interactions_24h": 17659,
-          "interactions_total": 39415
-        },
-        ...
-      ]
-    }
-
-    Processing:
-      1) Read topic_news_output["data"], which is expected to be a list of items.
-      2) For each item, map the fields to:
-         {
-           "post_type": string,
-           "post_title": string,
-           "post_link": string,
-           "post_created": int,
-           "post_sentiment": float,
-           "creator_name": string,
-           "interactions_24h": int,
-           "interactions_total": int
-         }
-
-    Output:
-      - A list of dicts, each representing a standardized news article.
-    """
-
-    if "data" not in topic_news_output:
-        raise ValueError("Input dictionary must contain a 'data' key.")
-
-    items = topic_news_output["data"]
-    if not isinstance(items, list):
-        raise ValueError("'data' must be a list of news items.")
-
-    formatted_news = []
-    for item in items:
-        mapped_post = {
-            "post_type": item.get("post_type", ""),
-            "post_title": item.get("post_title", ""),
-            "post_link": item.get("post_link", ""),
-            "post_created": item.get("post_created", 0),
-            "post_sentiment": item.get("post_sentiment", 3.0),
-            "creator_name": item.get("creator_name", ""),
-            "interactions_24h": item.get("interactions_24h", 0),
-            "interactions_total": item.get("interactions_total", 0),
-        }
-        formatted_news.append(mapped_post)
-
-    return formatted_news
 # ------------------------------------------------------------------------------
 # 31. socialSentimentScore
 # ------------------------------------------------------------------------------

@@ -126,11 +126,6 @@ class TestDataFunctions(unittest.TestCase):
         change = liquidityChange24h(500000.0, 400000.0)
         self.assertEqual(change, 25.0)
 
-    def test_socialSentimentScore(self):
-        """Test social sentiment score extraction"""
-        score = socialSentimentScore(self.social_data)
-        self.assertEqual(score, 0.75)
-
     def test_galaxyScore(self):
         """Test Galaxy Score extraction"""
         score = galaxyScore(self.social_data)
@@ -141,21 +136,6 @@ class TestDataFunctions(unittest.TestCase):
         rank = altRank(self.social_data)
         self.assertEqual(rank, 25)
 
-    def test_socialEngagementRate(self):
-        """Test social engagement rate calculation"""
-        rate = socialEngagementRate(self.social_data)
-        self.assertEqual(rate, 10)  # 10000/1000
-
-    def test_decentralizationScore(self):
-        """Test decentralization score calculation"""
-        score = decentralizationScore(self.token_holders)
-        self.assertIsInstance(score, float)
-        self.assertTrue(0 <= score <= 1)  # Score should be between 0 and 1
-
-    def test_marketMomentumScore(self):
-        """Test market momentum score calculation"""
-        score = marketMomentumScore(self.price_history, 5, 10)
-        self.assertIsInstance(score, float)
 
     def test_priceChange24h(self):
         """Test 24h price change calculation"""

@@ -63,20 +63,13 @@ class LunarCrush:
                 - volatility (float): Standard deviation of price
                 - circulating_supply (float): Number of coins actively available
                 - max_supply (float): Maximum supply of the coin
-                - percent_change_1h (float): 1-hour price change percentage
                 - percent_change_24h (float): 24-hour price change percentage
                 - percent_change_7d (float): 7-day price change percentage
+                - percent_change_30d (float): 30-day price change percentage
                 - market_cap (float): Total market capitalization in USD
                 - market_cap_rank (int): Rank by market cap
-                - interactions_24h (int): Number of social interactions
-                - social_volume_24h (int): Number of posts with interactions
-                - social_dominance (float): Percent of total social volume
-                - market_dominance (float): Percent of total market cap
                 - galaxy_score (int): Technical and social indicator score
                 - alt_rank (int): Performance score relative to other assets
-                - sentiment (float): Percentage of positive weighted posts
-                - categories (str): Asset categories/sectors
-                - blockchains (list): List of blockchain networks and contracts
 
         Raises:
             SocialAPIError: If the API request fails
