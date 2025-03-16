@@ -182,7 +182,7 @@ class LunarCrush:
         Get a list of all tracked coins with their market data.
 
         Returns:
-            list: List of coins including:
+            list: List of dicts including:
                 - id (int): LunarCrush internal ID
                 - symbol (str): Trading symbol
                 - name (str): Full name of the asset
