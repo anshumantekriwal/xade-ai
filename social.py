@@ -144,39 +144,6 @@ class LunarCrush:
         """
         return self._get(f"/nfts/{nft}/v1")
 
-    def get_topic_news(self, topic: str) -> Dict[str, Any]:
-        """
-        Get the top news posts for a social topic.
-
-        Args:
-            topic (str): Topic identifier (can include letters, numbers, spaces, #, and $)
-
-        Returns:
-            list: List of news articles including:
-                - id (str): LunarCrush internal ID for the article
-                - post_type (str): Type of social post
-                - post_title (str): Article title
-                - post_link (str): URL to view the article
-                - post_image (str): URL to the primary image
-                - post_created (int): Unix timestamp of creation
-                - post_sentiment (float): Sentiment score (1-5)
-                - creator_id (str): Unique identifier for creator
-                - creator_name (str): Screen name of creator
-                - creator_display_name (str): Display name of creator
-                - creator_followers (int): Number of creator followers
-                - creator_avatar (str): URL to creator's avatar
-                - interactions_24h (int): Interactions in last 24 hours
-                - interactions_total (int): Total number of interactions
-                - source_domain (str): Domain of the news source
-                - source_name (str): Name of the news source
-                - topics (list): Related topic identifiers
-                - assets (list): Related asset symbols
-
-        Raises:
-            SocialAPIError: If the API request fails
-        """
-        return self._get(f"/topic/{topic}/news/v1")
-
     def get_coins_list(self) -> List[Dict[str, Any]]:
         """
         Get a list of all tracked coins with their market data.
@@ -282,7 +249,7 @@ class CryptoPanic:
         except requests.exceptions.RequestException as e:
             raise SocialAPIError(f"CryptoPanic API request failed: {str(e)}")
 
-    def get_posts(
+    def get_news_and_posts(
         self,
         public: bool = False,
         filter: Optional[str] = None,
@@ -291,7 +258,7 @@ class CryptoPanic:
         kind: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Get news and media posts with various filtering options.
+        Get news and media posts about a particular currency or topic.
 
         Args:
             public (bool, optional): Filter by public posts only (default: False)

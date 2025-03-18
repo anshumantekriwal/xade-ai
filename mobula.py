@@ -113,6 +113,32 @@ class Mobula:
         offset: int = 0,
         filters: Optional[str] = None
     ) -> Dict[str, Any]:
+        """
+        Get blockchain pairs data.
+
+        Args:
+            blockchain (str, optional): Single blockchain name
+            blockchains (str, optional): Multiple comma-separated blockchain names
+            sort_by (str, optional): Field to sort by (default: "latest_trade_date")
+            sort_order (str, optional): Sort direction - "asc" or "desc" (default: "desc")
+            factory (str, optional): Factory contract address
+            limit (int, optional): Results per page (1-100, default: 100)
+            offset (int, optional): Pagination offset (default: 0)
+            filters (str, optional): Additional filter parameters
+
+        Returns:
+            dict: Contains:
+                - data (list): Array of pairs data including:
+                    - price and price change percentages (5min, 1h, 4h, 24h)
+                    - volume data (1min through 24h)
+                    - trade counts (1min through 24h)
+                    - liquidity and holder metrics
+                    - pair info (token0/token1) including:
+                        - address, price, reserves, metadata
+                        - exchange details
+                        - blockchain/protocol specifics
+                - factories (dict): Factory contract metadata
+        """
         params = {
             "blockchain": blockchain,
             "blockchains": blockchains,
@@ -207,6 +233,31 @@ class Mobula:
         amount: Optional[float] = None,
         latest: Optional[str] = None
     ) -> Dict[str, Any]:
+        """
+        Get market history for a trading pair.
+
+        Args:
+            blockchain (str, optional): Blockchain name
+            asset (str, optional): Asset name
+            symbol (str, optional): Trading symbol
+            address (str, optional): Contract address
+            base_token (str, optional): Base token address
+            from_timestamp (Union[int, str], optional): Start timestamp
+            to_timestamp (Union[int, str], optional): End timestamp  
+            period (str, optional): Time period granularity
+            amount (float, optional): Token amount
+            latest (str, optional): Latest data flag
+
+        Returns:
+            dict: Contains:
+                - data (list): Array of OHLCV candlesticks with:
+                    - volume (float): Trading volume
+                    - open (float): Opening price
+                    - high (float): Highest price
+                    - low (float): Lowest price
+                    - close (float): Closing price
+                    - time (int): Candle timestamp
+        """
         params = {k: v for k, v in locals().items() if k != 'self' and v is not None}
         return self._get("/market/history/pair", params)
 
